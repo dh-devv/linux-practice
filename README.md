@@ -1,24 +1,10 @@
 # linux-practice
+- 우분투 리눅스의 명령어와 실습 내용을 정리한 저장소입니다.
+  
+## 학습 기록
+- day01 : 기본 명령어 및 시스템 종료/재부팅
+- day02 : 폴더 및 파일 다루기
 
-## Day 01
-### 기본 명령어
-- ls : 파일 목록 확인
-- pwd : 현재 위치 확인
-- cd : 디렉토리 이동
-- cd .. : 상위 디렉토리로 이동
-
-### 시스템 종료 / 재부팅
-- init 0 : 종료
-- init 6 : 재부팅
-- shutdown -h : 종료
-- shutdown -k : 종료 알림
-- shutdown -c : 종료 취소
-- reboot : 재부팅
-- poweroff : 전원종료
-
-## 실습
-```Bash
-ls -l
-cd /etc
-pwd
-```
+## 사용 환경
+- Ubuntu Linux
+- VMware

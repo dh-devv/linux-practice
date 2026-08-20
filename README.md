@@ -21,7 +21,7 @@
 | **Day 05** | 셸 스크립트 작성 및 실행 권한 | 스크립트 기본 구조(`#!/bin/sh`), 환경변수(`$USER`, `$HOME`), 실행 권한 부여(`chmod +x`) | [`shell_script/day05_user_info.md`](./shell_script/day05_user_info.md) |
 | **Day 06** | 디스크 관리 및 마운트 기초 | 장치 마운트 원리(`mount`, `umount`), 용량 확인(`df -h`), 계정 관리(`useradd`), `alias` | [`basic/day06_basic_disk.md`](./basic/day06_basic_disk.md) |
 | **Day 06** | 프로세스 제어 및 작업 관리 | 프로세스 조회(`ps aux`, `pstree`), 백그라운드 전환(`jobs`, `bg`, `fg`), 강제 종료(`kill -9`) | [`process/day06_process_management.md`](./process/day06_process_management.md) |
-
+| **Day 07** | 사용자 및 그룹 관리 | 사용자 계정 관리(`adduser`, `passwd`, `usermod`, `userdel`), 그룹 관리(`groups`, `groupadd`, `groupmod`, `groupdel`, `gpasswd`), 사용자 및 그룹 정보 파일(`/etc/passwd`, `/etc/shadow`, `/etc/group`) | [user_permission/07_user_and_group_management.md](./user_permission/07_user_and_group_management.md) |
 ---
 
 ## 3. 저장소 폴더 구조 (Directory Structure)

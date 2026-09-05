@@ -22,8 +22,9 @@
 | **Day 05** | 셸 스크립트 작성 및 실행 권한 | 스크립트 기본 구조(`#!/bin/sh`), 환경 변수(`$USER`, `$HOME`), 실행 권한 부여(`chmod +x`) | [`shell_script/day05_user_info.md`](./shell_script/day05_user_info.md) |
 | **Day 06** | 디스크 관리 및 마운트 기초 | 장치 마운트 원리(`mount`, `umount`), 용량 확인(`df -h`), 계정 관리(`useradd`), 명령어 별칭(`alias`) | [`basic/day06_basic_disk.md`](./basic/day06_basic_disk.md) |
 | **Day 06** | 프로세스 제어 및 작업 관리 | 프로세스 조회(`ps aux`, `pstree`), 백그라운드 전환(`jobs`, `bg`, `fg`), 강제 종료(`kill -9`) | [`process/day06_process_management.md`](./process/day06_process_management.md) |
-| **Day 07** | 사용자 및 그룹 관리 | 사용자 계정 관리(`adduser`, `passwd`, `usermod`, `userdel`), 그룹 관리(`groups`, `groupadd`, `groupmod`, `groupdel`, `gpasswd`), 사용자 및 그룹 정보 파일(`/etc/passwd`, `/etc/shadow`, `/etc/group`) | [`user_permission/day07_user_and_group_management.md`](./user_permission/day07_user_and_group_management.md) |
-| **Day 08** | Linux 사용자 권한, 파일 구조 및 기본 명령어 | 관리자 권한(`sudo`, `su`, `sudo -i`), 파일 종류, Ubuntu 디렉터리 구조, 절대·상대 경로, 숨김 파일, 기본 명령어(`mkdir`, `rmdir`, `ls`, `man`) | [`basic/day08-linux-files-paths-commands.md`](./basic/day08-linux-files-paths-commands.md) |
+| **Day 07** | 사용자 및 그룹 관리 | 사용자 계정 관리(`adduser`, `passwd`, `usermod`, `userdel`), 그룹 관리(`groups`, `groupadd`, `groupmod`, `groupdel`, `gpasswd`), 사용자 및 그룹 정보 파일(`/etc/passwd`, `/etc/shadow`, `/etc/group`), 파일 허가권과 소유권  파일 정보 확인(`ls -l`), 권한 구조(`r`, `w`, `x`), 허가권 변경(`chmod`), 소유자 변경(`chown`), 그룹 변경(`chgrp`) | [`user_permission/day07_user_and_group_management.md`](./user_permission/day07_user_and_group_management.md) [`user_permission/day07_file_permissions_ownership.md`](./user_permission/day07_file_permissions_ownership.md) |
+| **Day 08** | Linux 사용자 권한, 파일 구조 및 기본 명령어 | 관리자 권한(`sudo`, `su`, `sudo -i`), 파일 종류, Ubuntu 디렉터리 구조, 절대·상대 경로, 숨김 파일, 기본 명령어(`mkdir`, `rmdir`, `ls`, `man`) | [`basic/day08_files_paths_commands.md`](./basic/day08_files_paths_commands.md) |
+| **DAY 09** | Linux 패키지 및 파일 관리 | 패키지 관리(`apt`, `dpkg`), 명령어 경로 확인(`which`), 파일 복사·이동·삭제(`cp`, `mv`, `rm`), 압축 및 해제(`zip`, `unzip`) | [`file/day05_package-and-file-management.md`](./file/day09_package_and_file_management.md) |
 
 ---
 

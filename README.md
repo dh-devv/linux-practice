@@ -1,63 +1,32 @@
 # linux-practice
 
-> Ubuntu Linux 환경에서의 기초 명령어 습득부터 디렉터리·파일 제어, DNS 네트워크 구조, 텍스트 파이프라인, 셸 스크립트 작성, 디스크 마운트, 사용자 및 그룹 관리, 프로세스 제어까지의 실습 및 이론을 기록하는 저장소입니다.
+Linux를 학습하며 직접 실행한 실습과 주제별 정리, 응용 결과물을 모으는 저장소입니다. 학습 과정을 기록하는 데 그치지 않고, 익힌 내용을 서버 구성과 운영에 적용해 포트폴리오로 발전시키는 것을 목표로 합니다.
 
----
+## 학습 환경
 
-## 1. 사용 환경 (Environment)
+- OS: Ubuntu Linux
+- 가상화 환경: VMware Workstation Pro
 
-* **OS**: Ubuntu Linux
-* **Hypervisor**: VMware Workstation
+## 폴더 구조
 
----
+| 폴더 | 내용 |
+| --- | --- |
+| [`basic/`](./basic/) | 기본 명령어, 디스크 관리, 파일 시스템과 경로 |
+| [`file/`](./file/) | 파일·디렉터리 관리, 패키지 관리, 파일 권한 |
+| [`network/`](./network/) | 네트워크 기초와 DNS |
+| [`process/`](./process/) | 프로세스 조회와 작업 제어 |
+| [`shell_script/`](./shell_script/) | 셸 스크립트 작성과 실행 |
+| [`text/`](./text/) | 텍스트 처리와 파이프라인 |
+| [`user_permission/`](./user_permission/) | 사용자·그룹 관리와 권한 설정 |
+| [`project/`](./project/) | 학습한 내용을 조합한 응용 실습 및 포트폴리오 후보 |
 
-## 2. 학습 목차 및 내용 요약 (Learning Index)
+주제별 실습 자료는 해당 폴더에 정리합니다. `project/`에는 단순 명령어 메모보다 목적, 구성 방법, 실행·검증 과정을 설명할 수 있는 결과물을 모읍니다. 프로젝트별 상세 안내가 필요해지면 해당 프로젝트 폴더에 별도의 README를 둡니다.
 
-| 일차 | 주제 | 주요 학습 내용 및 명령어 | 경로 (Path) |
-| :---: | :--- | :--- | :--- |
-| **Day 01** | Linux 기초 명령어 및 시스템 제어 | 파일 탐색(`ls`, `pwd`, `cd`), 시스템 종료 및 재부팅(`init`, `shutdown`, `reboot`, `poweroff`) | [`basic/day01_linux.md`](./basic/day01_linux.md) |
-| **Day 02** | 디렉터리 및 파일 제어 | 폴더 및 파일 생성·삭제(`mkdir`, `touch`, `rm`), 텍스트 편집(`nano`), 화면 정리(`clear`) | [`file/day02_file_linux.md`](./file/day02_file_linux.md) |
-| **Day 03** | 네트워크 기초 (DNS와 네임 서버) | 도메인-IP 변환 원리, Hosts 파일 참조 우선순위, DNS 캐시 및 계층적 조회 과정 | [`network/day03_DNS_basics.md`](./network/day03_DNS_basics.md) |
-| **Day 04** | 텍스트 파일 처리 및 파이프라인 | 텍스트 출력 및 탐색(`cat`, `head`, `tail`, `more`, `less`), 파이프(`\|`) 및 리다이렉션(`>`) | [`text/day04_text_commands.md`](./text/day04_text_commands.md) |
-| **Day 05** | 셸 스크립트 작성 및 실행 권한 | 스크립트 기본 구조(`#!/bin/sh`), 환경 변수(`$USER`, `$HOME`), 실행 권한 부여(`chmod +x`) | [`shell_script/day05_user_info.md`](./shell_script/day05_user_info.md) |
-| **Day 06** | 디스크 관리 및 마운트 기초 | 장치 마운트 원리(`mount`, `umount`), 용량 확인(`df -h`), 계정 관리(`useradd`), 명령어 별칭(`alias`) | [`basic/day06_basic_disk.md`](./basic/day06_basic_disk.md) |
-| **Day 06** | 프로세스 제어 및 작업 관리 | 프로세스 조회(`ps aux`, `pstree`), 백그라운드 전환(`jobs`, `bg`, `fg`), 강제 종료(`kill -9`) | [`process/day06_process_management.md`](./process/day06_process_management.md) |
-| **Day 07** | 사용자 및 그룹 관리 | 사용자 계정 관리(`adduser`, `passwd`, `usermod`, `userdel`), 그룹 관리(`groups`, `groupadd`, `groupmod`, `groupdel`, `gpasswd`), 사용자 및 그룹 정보 파일(`/etc/passwd`, `/etc/shadow`, `/etc/group`), 파일 허가권과 소유권  파일 정보 확인(`ls -l`), 권한 구조(`r`, `w`, `x`), 허가권 변경(`chmod`), 소유자 변경(`chown`), 그룹 변경(`chgrp`) | [`user_permission/day07_user_and_group_management.md`](./user_permission/day07_user_and_group_management.md) [`file/day07_file_permissions_and_ownership.md`](./file/day07_file_permissions_and_ownership.md) |
-| **Day 08** | Linux 사용자 권한, 파일 구조 및 기본 명령어 | 관리자 권한(`sudo`, `su`, `sudo -i`), 파일 종류, Ubuntu 디렉터리 구조, 절대·상대 경로, 숨김 파일, 기본 명령어(`mkdir`, `rmdir`, `ls`, `man`) | [`basic/day08_files_paths_commands.md`](./basic/day08_files_paths_commands.md) |
-| **DAY 09** | Linux 패키지 및 파일 관리 | 패키지 관리(`apt`, `dpkg`), 명령어 경로 확인(`which`), 파일 복사·이동·삭제(`cp`, `mv`, `rm`), 압축 및 해제(`zip`, `unzip`) | [`file/day09_package-and-file-management.md`](./file/day09_package_and_file_management.md) |
+## 목표
 
----
+1. Linux 명령어와 시스템 관리의 기본기를 익히고, 실습을 통해 동작 원리를 확인합니다.
+2. 사용자·권한, 네트워크, 프로세스, 디스크 관리 지식을 연결해 Linux 서버를 구성하고 운영합니다.
+3. 셸 스크립트와 가상화 기술을 활용해 반복 작업을 개선하고, 서비스를 배포하는 과정을 익힙니다.
+4. 배운 내용을 재현 가능한 실습과 프로젝트로 정리해 포트폴리오로 활용할 수 있도록 발전시킵니다.
 
-## 3. 저장소 폴더 구조 (Directory Structure)
-
-```text
-linux-practice/
-├── basic/              # Linux 기초 명령어, 사용자 계정 및 디스크/마운트 관리
-│   ├── day01_linux.md
-│   └── day08-linux-files-paths-commands.md
-├── file/               # 파일 및 디렉터리 생성·삭제·수정 명령어
-├── network/            # DNS, 네임 서버 및 네트워크 기초 개념
-├── process/            # 프로세스 상태 조회, 백그라운드 작업 및 시그널 제어
-├── project/            # Linux 관련 실습 프로젝트 및 응용
-├── shell_script/       # 셸 스크립트 작성 및 실행 권한 설정
-├── text/               # 텍스트 출력, 검색 및 파이프라인 연산자 활용
-├── user_permission/    # 사용자 권한 및 소유권 관리
-├── Learning-Log.md     # 1~8일차 전체 학습 종합 분석 및 문제 해결 일지
-└── README.md           # 저장소 개요 및 학습 목차
-```
-
----
-
-## 4. 목표 및 향후 계획 (Goals & Roadmap)
-
-* **단기 목표**: Linux 환경에서 서버를 직접 구축하고, 지속적으로 운영하며 외부로 배포하는 전 과정을 익힙니다.
-
-* **중장기 목표**:
-  * **배포 자동화**: 소스 코드의 수정 및 적용 과정을 자동화하여 효율적으로 서버에 반영하는 환경을 구성합니다.
-  * **가상화 기술 적용**: 다양한 서비스 환경을 독립적으로 구성하고 효율적으로 관리할 수 있도록 가상화 기술을 학습하고 적용합니다.
-
----
-
-## 5. 상세 학습 일지 안내 (Learning Log)
-
-일차별 상세 개념 원리, 실습 코드 해석, 막혔던 점과 해결 내용, 그리고 종합 회고는 **[`Learning-Log.md`](./Learning-Log.md)** 파일에 정리되어 있습니다.
+이 README는 저장소의 목적과 구조를 안내하는 문서입니다. 개별 학습 내용을 매번 추가하지 않고, 폴더 구조나 저장소의 방향이 바뀔 때 갱신합니다.

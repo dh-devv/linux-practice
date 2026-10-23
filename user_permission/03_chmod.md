@@ -1,4 +1,4 @@
-# Linux Day 10 - chmod를 이용한 접근 권한 변경
+# chmod를 이용한 접근 권한 변경
 
 ## 1. chmod란?
 

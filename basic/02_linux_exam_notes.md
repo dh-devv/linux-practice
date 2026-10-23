@@ -1,4 +1,4 @@
-# Day 08: Linux 기초 정리
+# Linux 기초 정리
 
 > Linux와 Ubuntu 시험 대비 핵심 정리
 

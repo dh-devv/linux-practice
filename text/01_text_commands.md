@@ -23,4 +23,3 @@ tail test.txt
 cat test.txt | more
 cat test.txt | less
 ```
-

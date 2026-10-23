@@ -1,4 +1,4 @@
-###  1. `process/day06_process_management.md` 
+###  1. `process/02_process_management.md` 
 
 # Linux 프로세스(Process) 관리
 

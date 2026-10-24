@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리눅스마스터 2급 1차 비주얼 마스터북</title>
+<style>
+  :root {
+    --bg: #f3f6fa;
+    --surface: #ffffff;
+    --text: #111827;
+    --muted: #4b5563;
+    --border: #e2e8f0;
+    --primary: #2563eb;
+    --primary-soft: #dbeafe;
+    --accent: #7c3aed;
+    --accent-soft: #ede9fe;
+    --success: #059669;
+    --success-soft: #d1fae5;
+    --warn: #d97706;
+    --warn-soft: #fef3c7;
+    --danger: #dc2626;
+    --danger-soft: #fee2e2;
+    --dark: #0f172a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding-bottom: 5rem;
+  }
+
+  /* 상단 고정 헤더 & 진도율 바 */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  }
+  .progress-wrap {
+    height: 6px;
+    background: #e2e8f0;
+    width: 100%;
+  }
+  #progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    transition: width 0.25s ease;
+  }
+  .header-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--dark);
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-family: monospace;
+    font-size: 1.1rem;
+  }
+  .brand h1 { font-size: 1.15rem; font-weight: 800; }
+  .brand span { font-size: 0.78rem; color: var(--muted); display: block; }
+
+  .header-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+  }
+  #search-input {
+    padding: 0.45rem 0.85rem;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    width: 240px;
+    outline: none;
+  }
+  #search-input:focus { border-color: var(--primary); }
+
+  /* 탭 네비게이션 */
+  nav.tabs {
+    max-width: 1180px;
+    margin: 1rem auto 0;
+    padding: 0 1.25rem;
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  nav.tabs a {
+    text-decoration: none;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.45rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    transition: 0.15s;
+  }
+  nav.tabs a:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  main {
+    max-width: 1180px;
+    margin: 1.25rem auto;
+    padding: 0 1.25rem;
+  }
+
+  /* 시험 스펙 대시보드 */
+  .spec-banner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+  }
+  .spec-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .spec-num {
+    font-size: 1.45rem;
+    font-weight: 900;
+    color: var(--primary);
+    line-height: 1.1;
+  }
+  .spec-label { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+
+  /* 섹션 & 카드 */
+  section.domain { margin-bottom: 2.75rem; }
+  .sec-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--dark);
+  }
+  .sec-title h2 { font-size: 1.35rem; font-weight: 900; }
+  .sec-title span { font-size: 0.82rem; font-weight: 700; color: var(--muted); }
+
+  .card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.35rem;
+    margin-bottom: 1.15rem;
+    transition: border-color 0.2s;
+  }
+  .card.mastered {
+    border-color: var(--success);
+    background: #f8fffb;
+  }
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .card-head h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 0.72rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 6px;
+    font-weight: 800;
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+  .tag.purple { background: var(--accent-soft); color: var(--accent); }
+  .tag.warn { background: var(--warn-soft); color: var(--warn); }
+
+  .check-btn {
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.3rem 0.65rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .card.mastered .check-btn {
+    background: var(--success);
+    color: #fff;
+    border-color: var(--success);
+  }
+
+  /* 시각 다이어그램 전용 컴포넌트들 */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.85rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; }
+
+  /* 1) OS 양파 다이어그램 */
+  .onion-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+  }
+  .onion-layer {
+    width: 100%;
+    text-align: center;
+    border-radius: 12px;
+    padding: 0.6rem;
+    font-weight: 700;
+    font-size: 0.86rem;
+    border: 2px solid;
+  }
+  .onion-1 { background: #eff6ff; border-color: #93c5fd; color: #1e3a8a; }
+  .onion-2 { background: #ede9fe; border-color: #c4b5fd; color: #4c1d95; width: 90%; margin-top: 0.4rem; }
+  .onion-3 { background: #fef3c7; border-color: #fcd34d; color: #78350f; width: 78%; margin-top: 0.4rem; }
+  .onion-4 { background: #1e293b; border-color: #0f172a; color: #38bdf8; width: 64%; margin-top: 0.4rem; }
+
+  /* 2) 가로 타임라인 */
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    gap: 0.6rem;
+    margin: 0.5rem 0;
+  }
+  .tl-node {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--primary);
+    border-radius: 8px;
+    padding: 0.7rem;
+  }
+  .tl-year { font-size: 0.95rem; font-weight: 900; color: var(--primary); }
+  .tl-who { font-size: 0.76rem; font-weight: 700; color: var(--accent); margin-bottom: 0.25rem; }
+  .tl-desc { font-size: 0.8rem; color: var(--text); line-height: 1.4; }
+
+  /* 3) 플로우차트 박스 */
+  .flow-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.65rem 0;
+  }
+  .flow-step {
+    background: #f1f5f9;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.83rem;
+    font-weight: 700;
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+  }
+  .flow-step small { display: block; font-weight: 500; color: var(--muted); font-size: 0.74rem; margin-top: 2px; }
+  .flow-arrow { font-weight: 900; color: var(--primary); font-size: 1.1rem; }
+
+  /* 4) 파티션 블록 시각화 */
+  .disk-bar {
+    display: flex;
+    flex-wrap: wrap;
+    border: 2px solid var(--dark);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0.65rem 0;
+  }
+  .part-block {
+    padding: 0.65rem 0.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex: 1;
+    border-right: 1px solid rgba(0,0,0,0.15);
+  }
+  .part-pri { background: #dbeafe; color: #1e40af; }
+  .part-ext { background: #fef3c7; color: #92400e; flex: 2.2; }
+  .part-log {
+    display: inline-block;
+    background: #fde68a;
+    border: 1px dashed #b45309;
+    border-radius: 5px;
+    padding: 0.2rem 0.45rem;
+    margin: 0.2rem 0.1rem 0;
+    font-size: 0.76rem;
+  }
+
+  /* 5) 컬러필드 분해기 (/etc/fstab, /etc/passwd) */
+  .field-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    background: var(--dark);
+    padding: 0.85rem;
+    border-radius: 10px;
+    margin: 0.6rem 0;
+    align-items: stretch;
+  }
+  .f-token {
+    border-radius: 6px;
+    padding: 0.45rem 0.65rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .f-token span {
+    font-family: sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-top: 0.2rem;
+  }
+  .ft-1 { background: #1e3a8a; color: #93c5fd; }
+  .ft-2 { background: #065f46; color: #6ee7b7; }
+  .ft-3 { background: #5b21b6; color: #ddd6fe; }
+  .ft-4 { background: #92400e; color: #fde68a; }
+  .ft-5 { background: #831843; color: #fbcfe8; }
+  .ft-6 { background: #334155; color: #e2e8f0; }
+
+  /* 6) 미니 카드 & 비교표 */
+  .mini-box {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem;
+    font-size: 0.86rem;
+  }
+  .mini-box h4 {
+    font-size: 0.92rem;
+    margin-bottom: 0.4rem;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.65rem 0;
+    font-size: 0.86rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 0.5rem 0.65rem;
+    text-align: left;
+    vertical-align: middle;
+  }
+  th { background: #f1f5f9; font-weight: 800; }
+
+  code {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    background: #f1f5f9;
+    color: #be123c;
+    padding: 0.12rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 700;
+  }
+
+  pre {
+    background: var(--dark);
+    color: #e2e8f0;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 0.82rem;
+    overflow-x: auto;
+    margin: 0.6rem 0;
+    line-height: 1.5;
+  }
+
+  /* 함정 경보 배지 */
+  .trap {
+    background: var(--danger-soft);
+    border-left: 4px solid var(--danger);
+    color: #7f1d1d;
+    padding: 0.7rem 0.95rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.84rem;
+    margin-top: 0.75rem;
+  }
+  .trap strong { color: var(--danger); font-weight: 800; }
+
+  /* 7) vi 가상 키보드 키캡 */
+  .keycap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.55rem;
+    margin-top: 0.5rem;
+  }
+  .key-card {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-bottom: 3px solid #94a3b8;
+    border-radius: 8px;
+    padding: 0.55rem 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+  }
+  .key {
+    background: var(--dark);
+    color: #fff;
+    font-family: monospace;
+    font-weight: 800;
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    min-width: 34px;
+    text-align: center;
+  }
+
+  /* 8) 인터랙티브 umask & chmod 계산기 */
+  .sim-panel {
+    background: #eff6ff;
+    border: 1.5px solid #93c5fd;
+    border-radius: 10px;
+    padding: 0.9rem;
+    margin-top: 0.75rem;
+  }
+  .sim-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+  .sim-controls input {
+    width: 90px;
+    padding: 0.35rem 0.5rem;
+    font-family: monospace;
+    font-size: 0.95rem;
+    font-weight: 800;
+    border: 1.5px solid var(--primary);
+    border-radius: 6px;
+    text-align: center;
+  }
+  .sim-out {
+    background: var(--dark);
+    color: #38bdf8;
+    padding: 0.45rem 0.8rem;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  /* 모의고사 스타일 */
+  .quiz-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem;
+    margin-bottom: 0.85rem;
+  }
+  .quiz-q { font-weight: 800; font-size: 0.94rem; margin-bottom: 0.6rem; }
+  .quiz-opts label {
+    display: block;
+    padding: 0.4rem 0.65rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.87rem;
+    margin-bottom: 0.2rem;
+    border: 1px solid transparent;
+  }
+  .quiz-opts label:hover { background: #f1f5f9; }
+  .quiz-exp {
+    display: none;
+    margin-top: 0.6rem;
+    padding: 0.65rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.83rem;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+  }
+  .btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 0.88rem;
+  }
+
+  .hidden-by-search { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="progress-wrap"><div id="progress-bar"></div></div>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-icon">&gt;_</div>
+      <div>
+        <h1>리눅스마스터 2급 1차 비주얼 마스터북</h1>
+        <span>글씨 폭탄 제거 · 다이어그램 + 인터랙티브 시뮬레이터 + 1차 전 범위 무결점 판</span>
+      </div>
+    </div>
+    <div class="header-tools">
+      <div class="stat-pill" id="mastery-stat">학습 완료: 0 / 22 카드 (0%)</div>
+      <input type="search" id="search-input" placeholder="빠른 검색 (예: fstab, umask, grep...)">
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <a href="#sec1">1. 개요·역사·라이선스</a>
+  <a href="#sec2">2. 설치·파티션·fstab·부팅</a>
+  <a href="#sec3">3. 계정·권한·시작스크립트</a>
+  <a href="#sec4">4. 디렉터리·파일·링크·압축</a>
+  <a href="#sec5">5. 텍스트·vi·프로세스·네트워크·통신</a>
+  <a href="#sec6">6. 스피드 퀴즈 (25문항)</a>
+</nav>
+
+<main>
+
+  <!-- 한눈에 보는 1차 시험 스펙 -->
+  <div class="spec-banner searchable-block">
+    <div class="spec-box">
+      <div class="spec-num">50문항</div>
+      <div class="spec-label">객관식 4지선다<br>(과목: 리눅스 일반)</div>
+    </div>
+    <div class="spec-box">
+      <div class="spec-num">60분</div>
+      <div class="spec-label">시험 시간<br>(온라인 CBT 방식)</div>
+    </div>
+    <div class="spec-box">
+      <div class="spec-num">60점↑</div>
+      <div class="spec-label">합격 기준<br>(50개 중 30개 정답)</div>
+    </div>
+    <div class="spec-box">
+      <div class="spec-num">3대 영역</div>
+      <div class="spec-label">① 리눅스의 이해<br>② 설치 ③ 기본 명령어</div>
+    </div>
+  </div>
+
+  <!-- ================= SECTION 1 ================= -->
+  <section id="sec1" class="domain">
+    <div class="sec-title">
+      <h2>PART 1. 리눅스의 개요 · 역사 · 라이선스</h2>
+      <span>글 대신 구조도와 타임라인으로 암기</span>
+    </div>
+
+    <!-- CARD 1 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>1-1. 리눅스 시스템 양파 구조 (Kernel vs Shell vs 배포판) <span class="tag">개념 1순위</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="grid-2">
+        <div class="onion-wrap">
+          <div class="onion-layer onion-1">👤 사용자 &amp; 응용 프로그램 (X Window, 웹브라우저, 편집기)</div>
+          <div class="onion-layer onion-2">🐚 셸 (Shell: bash, sh, csh, zsh) — 명령어 해석기</div>
+          <div class="onion-layer onion-3">⚙️ 커널 (Kernel: Linux) — 자원 제어·스케줄링·동적 모듈(LKM)</div>
+          <div class="onion-layer onion-4">💻 물리 하드웨어 (CPU, RAM, Disk, NIC)</div>
+        </div>
+        <div class="mini-box">
+          <h4>핵심 요약 3줄 컷</h4>
+          <p>• <strong>커널(Kernel):</strong> 토르발스가 개발. 하드웨어 직접 제어. <strong>모놀리식(단일형) 커널</strong>이지만 실행 중 <code>modprobe</code>, <code>insmod</code>, <code>rmmod</code>로 <strong>모듈을 동적 추가/제거</strong> 가능!</p>
+          <p style="margin-top:0.4rem;">• <strong>셸(Shell):</strong> 사용자의 명령어를 해석해 커널에 전달. 리눅스 기본 표준은 <strong><code>bash</code></strong>(Bourne Again Shell).</p>
+          <p style="margin-top:0.4rem;">• <strong>배포판:</strong> Linux 커널 + GNU 유틸리티(GCC, bash 등) + 패키지 관리자를 묶은 완제품.</p>
+        </div>
+      </div>
+      <div class="trap">
+        <strong>🚨 오답 함정:</strong> "셸이 하드웨어를 직접 제어한다"(X → 커널 역할) / "모놀리식 커널이라 실행 중 모듈 추가가 불가능하다"(X → 동적 모듈 적재 가능)
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>1-2. 한눈에 보는 UNIX → GNU → Linux 탄생 타임라인 <span class="tag purple">연도·인물 매칭</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="timeline">
+        <div class="tl-node">
+          <div class="tl-year">1969</div>
+          <div class="tl-who">톰슨 &amp; 리치 (벨연구소)</div>
+          <div class="tl-desc">Multics 철수 후 어셈블리어로 최초 <strong>UNIX</strong> 개발</div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-year">1973</div>
+          <div class="tl-who">데니스 리치</div>
+          <div class="tl-desc">UNIX를 <strong>C언어로 재작성</strong> → 하드웨어 <strong>이식성</strong> 폭발</div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-year">1970s~</div>
+          <div class="tl-who">AT&amp;T vs UC버클리</div>
+          <div class="tl-desc">상업용 <strong>System V</strong> vs 학술·네트워크 <strong>BSD</strong>(빌 조이) 분화</div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-year">1983</div>
+          <div class="tl-who">리처드 스톨먼</div>
+          <div class="tl-desc"><strong>GNU 프로젝트</strong> 시작 (GCC, Emacs, bash, <strong>Hurd 커널</strong>)</div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-year">1985</div>
+          <div class="tl-who">리처드 스톨먼</div>
+          <div class="tl-desc">GNU 지원 위해 <strong>FSF(자유소프트웨어재단)</strong> 설립</div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-year">1987</div>
+          <div class="tl-who">앤드루 타넨바움</div>
+          <div class="tl-desc">교육용 소형 유닉스 <strong>MINIX</strong> 개발 (리눅스에 영감 제공)</div>
+        </div>
+        <div class="tl-node">
+          <div class="tl-year">1991</div>
+          <div class="tl-who">리눅스 토르발스</div>
+          <div class="tl-desc"><strong>Linux 커널</strong>(v0.01/0.02) 공개 + GNU 결합 완성 (마스코트 <strong>Tux</strong>)</div>
+        </div>
+      </div>
+      <div class="trap">
+        <strong>🚨 연도 구분 함정:</strong> <strong>GNU 프로젝트(1983)</strong> ≠ <strong>FSF 설립(1985)</strong>. GNU가 개발하던 자체 마이크로커널 이름은 <strong>Hurd(허드)</strong>!
+      </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>1-3. 리눅스 3대 배포판 가계도 &amp; 패키지 도구 <span class="tag">짝짓기 단골</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="grid-3">
+        <div class="mini-box">
+          <h4>① Slackware 계열 (1993) <span>최고령</span></h4>
+          <p>• 창시: <strong>패트릭 볼커딩</strong> (SLS 기반)</p>
+          <p>• 패키지: <code>.tgz</code>, <code>.txz</code> / <code>pkgtool</code></p>
+          <p>• 파생: <strong>SUSE (openSUSE, SLES)</strong> → 독자 RPM &amp; <code>zypper</code>, <code>YaST</code> 사용</p>
+        </div>
+        <div class="mini-box">
+          <h4>② Debian 계열 (1993) <span>커뮤니티</span></h4>
+          <p>• 창시: <strong>이안 머독</strong></p>
+          <p>• 패키지: <code>.deb</code> / 저수준 <code>dpkg</code>, 고수준 <code>apt</code>, <code>apt-get</code></p>
+          <p>• 파생: <strong>Ubuntu</strong>, <strong>Linux Mint</strong>, <strong>Kali Linux</strong>(보안/해킹 특화)</p>
+        </div>
+        <div class="mini-box">
+          <h4>③ Red Hat 계열 <span>기업 서버 표준</span></h4>
+          <p>• 창시: 밥 영 &amp; 마크 유잉</p>
+          <p>• 패키지: <code>.rpm</code> / 저수준 <code>rpm</code>, 고수준 <code>yum</code>, <code>dnf</code></p>
+          <p>• 종류: <strong>RHEL</strong>(유료 기술지원), <strong>Fedora</strong>(테스트베드), <strong>CentOS / Rocky / AlmaLinux</strong>(무료 호환)</p>
+        </div>
+      </div>
+      <p style="font-size:0.82rem; color:var(--muted); margin-top:0.5rem;">※ 기타: <strong>Arch Linux</strong>(롤링 릴리스, <code>pacman</code>), <strong>Gentoo</strong>(소스 직접 컴파일, <code>Portage</code>/<code>emerge</code>)</p>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>1-4. 오픈소스 라이선스 신호등 비교표 (FSF vs OSI) <span class="tag warn">법적 조건 주의</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="grid-2" style="margin-bottom:0.6rem;">
+        <div class="mini-box">
+          <h4>🕊️ FSF (자유 소프트웨어 재단, 스톨먼)</h4>
+          <p>• <strong>4대 자유:</strong> 실행(0) · 학습/개작(1) · 복제배포(2) · 개선본배포(3)<br>
+          • 윤리적 자유 강조. <strong>상업적 유료 판매도 허용!</strong></p>
+        </div>
+        <div class="mini-box">
+          <h4>⚙️ OSI (오픈소스 이니셔티브, 1998 레이먼드)</h4>
+          <p>• 'Free=공짜' 오해 방지 위해 Open Source 용어 채택<br>
+          • <strong>OSD(오픈소스 정의 10대 조건)</strong> 제정, 기업 참여·실용성 강조</p>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>라이선스</th>
+            <th>외부 배포 시 소스 공개 범위</th>
+            <th>독점(상용) SW 결합/비공개 가능 여부 및 핵심 포인트</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>GPL</strong> (v2/v3)</td>
+            <td>🔴 <strong>외부 배포 시</strong> 전체 파생물 소스 공개</td>
+            <td>• 리눅스 커널은 <strong>GPLv2</strong>. (GPLv3는 하드웨어 잠금 <strong>티보이제이션 방지</strong> 추가)<br>
+            • <strong>내부에서만 수정·사용하고 배포 안 하면 공개 의무 없음!</strong></td>
+          </tr>
+          <tr>
+            <td><strong>AGPL</strong></td>
+            <td>🔴 배포 + <strong>네트워크(웹/클라우드) 서비스 시에도 공개</strong></td>
+            <td>• 서버에서 실행만 할 때 GPL 공개 의무가 비켜가는 허점을 막음</td>
+          </tr>
+          <tr>
+            <td><strong>LGPL</strong></td>
+            <td>🟡 라이브러리 수정분만 공개</td>
+            <td>• <strong>단순 동적 링크(Linking)한 독점 응용프로그램 자체 소스는 비공개 허용!</strong></td>
+          </tr>
+          <tr>
+            <td><strong>MPL</strong></td>
+            <td>🟡 <strong>수정한 MPL 파일만</strong> 공개</td>
+            <td>• 모질라(넷스케이프) 제정. 별도 파일로 작성한 독점 코드는 비공개 가능</td>
+          </tr>
+          <tr>
+            <td><strong>BSD / MIT / Apache</strong></td>
+            <td>🟢 <strong>소스 공개 의무 없음 (Permissive)</strong></td>
+            <td>• 저작권 고지만 유지하면 수정본을 완전히 비공개 상용화 가능<br>
+            • <strong>Apache</strong>는 명확한 <strong>특허권 허여 및 특허 소송 방지 조항</strong> 포함</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 2 ================= -->
+  <section id="sec2" class="domain">
+    <div class="sec-title">
+      <h2>PART 2. 설치 · 디스크 · 파티션 · `/etc/fstab` · 부트 매니저</h2>
+      <span>눈으로 보는 파티션 블록 &amp; 설정 파일 분해</span>
+    </div>
+
+    <!-- CARD 5 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>2-1. 디스크 인터페이스 &amp; 파티션 번호 다이어그램 (MBR vs GPT) <span class="tag">시험 최빈출</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="grid-3" style="margin-bottom:0.75rem;">
+        <div class="mini-box">
+          <h4>IDE (PATA) 구형</h4>
+          <p>• <strong>40핀 커넥터</strong> (40가닥 or <strong>80가닥 전선</strong>)<br>
+          • Primary Master/Slave: <code>/dev/hda</code>, <code>/dev/hdb</code><br>
+          • Secondary Master/Slave: <code>/dev/hdc</code>, <code>/dev/hdd</code></p>
+        </div>
+        <div class="mini-box">
+          <h4>병렬 SCSI / SATA / SAS / USB</h4>
+          <p>• 장치명: <code>/dev/sda</code>, <code>/dev/sdb</code> ...<br>
+          • 파티션: <code>/dev/sda1</code>, <code>/dev/sda2</code><br>
+          • 병렬 SCSI: 양끝 <strong>종단저항</strong>, 컨트롤러 <strong>ID 7(최우선)</strong></p>
+        </div>
+        <div class="mini-box">
+          <h4>NVMe (PCIe 고속 SSD)</h4>
+          <p>• 장치명: <code>/dev/nvme0n1</code> (숫자로 끝남)<br>
+          • 파티션은 <strong><code>p</code>가 붙음!</strong><br>
+          → <strong><code>/dev/nvme0n1p1</code></strong>, <code>p2</code></p>
+        </div>
+      </div>
+
+      <p style="font-size:0.86rem; font-weight:800; margin-bottom:0.25rem;">📊 MBR (msdos) 디스크의 주 파티션 · 확장 파티션 · 논리 파티션 번호 법칙 (최대 2TB 한계)</p>
+      <div class="disk-bar">
+        <div class="part-block part-pri">주 파티션 1<br><code>/dev/sda1</code></div>
+        <div class="part-block part-pri">주 파티션 2<br><code>/dev/sda2</code></div>
+        <div class="part-block part-ext">
+          확장 파티션 (주 파티션 자리 1개 사용: <code>/dev/sda3</code>, 컨테이너 역할)<br>
+          <span class="part-log">첫 논리: <strong><code>/dev/sda5</code></strong></span>
+          <span class="part-log">두 번째 논리: <strong><code>/dev/sda6</code></strong></span>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:0.6rem;">
+        <div class="mini-box">
+          <h4>MBR 핵심 법칙</h4>
+          <p>• 주 파티션 최대 <strong>4개(1~4번 예약)</strong>, 확장 파티션은 <strong>최대 1개</strong>만 가능.<br>
+          • <strong>논리 파티션은 앞에 주 파티션이 몇 개든 무조건 <code>5번</code>부터 시작!</strong></p>
+        </div>
+        <div class="mini-box">
+          <h4>GPT &amp; RAID 기초</h4>
+          <p>• <strong>GPT:</strong> 2TB 초과 대용량 지원, 기본 128개 파티션 구성. UEFI 표준이나 <strong>GRUB 사용 시 BIOS에서도 부팅 가능!</strong><br>
+          • <strong>RAID:</strong> RAID 0(스트라이핑, 고장복구불가) / RAID 1(미러링) / RAID 5(최소 3개, 단일 패리티) / RAID 6(최소 4개, 이중 패리티)<br>
+          • <strong>LVM 순서:</strong> 물리볼륨(<strong>PV</strong>) → 볼륨그룹(<strong>VG</strong>) → 논리볼륨(<strong>LV</strong>)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 6: /etc/fstab 완벽 해부 (보강 항목) -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>2-2. 파일 시스템 비교 &amp; `/etc/fstab` 6개 필드 컬러 해부도 <span class="tag purple">누락 완벽 보강</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="grid-4" style="margin-bottom:0.75rem;">
+        <div class="mini-box"><h4>ext2</h4><p><strong>비저널링</strong> (구형). 비정상 종료 시 <code>fsck</code> 오래 걸림</p></div>
+        <div class="mini-box"><h4>ext3</h4><p><strong>저널링 도입</strong> (`mke2fs -j`). 빠른 복구 지원</p></div>
+        <div class="mini-box"><h4>ext4</h4><p>저널링 + 익스텐트. 단일파일 16TB, 볼륨 1EiB</p></div>
+        <div class="mini-box"><h4>XFS</h4><p>64비트 고성능 저널링. <strong>RHEL 7+ 기본 FS</strong></p></div>
+      </div>
+
+      <p style="font-size:0.86rem; font-weight:800;">🔍 부팅 시 자동 마운트 설정 파일: <code>/etc/fstab</code> 6개 필드 구조 (※ 현재 마운트 상태 기록 파일은 <code>/etc/mtab</code>)</p>
+      <div class="field-strip">
+        <div class="f-token ft-1">① UUID=... (또는 /dev/sdb1)<span>[1] 파일시스템 장치명/UUID/LABEL</span></div>
+        <div class="f-token ft-2">② /home<span>[2] 마운트 포인트(경로)</span></div>
+        <div class="f-token ft-3">③ ext4<span>[3] 파일시스템 종류(ext4, xfs, swap)</span></div>
+        <div class="f-token ft-4">④ defaults,usrquota<span>[4] 마운트 옵션 (핵심!)</span></div>
+        <div class="f-token ft-5">⑤ 1 (또는 0)<span>[5] dump 백업 여부 (0:안함, 1:함)</span></div>
+        <div class="f-token ft-6">⑥ 2 (0/1/2)<span>[6] fsck 점검 순서 (0:안함, 1:루트, 2:기타)</span></div>
+      </div>
+      <div class="mini-box">
+        <h4>[4번째 필드] `/etc/fstab` 필수 마운트 옵션 암기</h4>
+        <p>• <strong><code>defaults</code>:</strong> <code>rw, suid, dev, exec, auto, nouser, async</code> 7가지 기본 속성을 한 번에 부여<br>
+        • <code>auto</code> / <code>noauto</code>: 부팅 시(또는 <code>mount -a</code> 실행 시) 자동 마운트 여부 | <code>ro</code>(읽기전용) / <code>rw</code>(읽기·쓰기)<br>
+        • <code>exec</code> / <code>noexec</code>: 바이너리 실행 허용 여부 | <code>suid</code> / <code>nosuid</code>: SetUID/SetGID 허용 여부 | <code>usrquota</code> / <code>grpquota</code>: 디스크 쿼터 활성화</p>
+      </div>
+      <pre># 디스크/파일시스템 핵심 명령어 한눈에 보기
+fdisk -l                    # 파티션 테이블 확인 (fdisk 대화형 키: n 생성, d 삭제, p 출력, t 타입변경[82:swap, 83:Linux, 8e:LVM], w 저장, q 취소)
+mkfs -t ext4 /dev/sdb1      # 파일시스템 포맷 (= mkfs.ext4 /dev/sdb1, XFS는 mkfs.xfs -f /dev/sdb1)
+mkswap /dev/sdb2 && swapon /dev/sdb2   # 스왑 포맷 후 활성화 (해제는 swapoff, 확인은 free 또는 swapon -s)
+mount -t ext4 /dev/sdb1 /mnt           # 마운트 (해제는 umount /mnt  ← 철자 unmount 아님 주의!)
+df -h (-i: inode 확인, -T: FS유형 표시)  # 마운트된 디스크의 전체/남은 용량 확인  vs  du -sh /var (특정 디렉터리 실제 사용량 합산)</pre>
+    </div>
+
+    <!-- CARD 7 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>2-3. 부팅 플로우차트 &amp; GRUB Legacy vs GRUB 2 비교 <span class="tag">버전 번호 구분</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="flow-row">
+        <div class="flow-step">① BIOS / UEFI<small>POST 하드웨어 점검</small></div>
+        <div class="flow-arrow">➜</div>
+        <div class="flow-step">② 부트 로더 (GRUB)<small>커널 선택 및 로드</small></div>
+        <div class="flow-arrow">➜</div>
+        <div class="flow-step">③ 커널 (vmlinuz)<small>initramfs 마운트</small></div>
+        <div class="flow-arrow">➜</div>
+        <div class="flow-step">④ PID 1 (systemd / init)<small>첫 프로세스 실행</small></div>
+        <div class="flow-arrow">➜</div>
+        <div class="flow-step">⑤ Runlevel / Target<small>서비스 구동 &amp; 로그인</small></div>
+      </div>
+
+      <div class="grid-2">
+        <table>
+          <thead>
+            <tr><th>구분</th><th>GRUB Legacy (0.9x)</th><th>GRUB 2 (1.9x / 2.x 표준)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>설정 파일</strong></td><td><code>/boot/grub/grub.conf</code><br>(<code>menu.lst</code>)</td><td><code>/boot/grub2/grub.cfg</code><br>(직접 수정 X → <code>/etc/default/grub</code> 수정 후 <code>grub2-mkconfig</code> 실행)</td></tr>
+            <tr><td><strong>첫 디스크 첫 파티션(<code>sda1</code>)</strong></td><td><strong><code>(hd0, 0)</code></strong><br>(파티션 0번부터!)</td><td><strong><code>(hd0, 1)</code></strong> 또는 <code>(hd0,msdos1)</code><br>(디스크는 0번, <strong>파티션은 1번부터!</strong>)</td></tr>
+            <tr><td><strong>부트 메뉴 단축키</strong></td><td colspan="2">• <strong><code>e</code> 키:</strong> 부팅 설정 <strong>일시 편집</strong> (재부팅 시 초기화)<br>• <strong><code>c</code> 키:</strong> GRUB 명령 프롬프트 진입</td></tr>
+          </tbody>
+        </table>
+        <div class="mini-box">
+          <h4>Runlevel (0~6) &amp; systemd Target 매칭</h4>
+          <p>• <strong>0:</strong> 시스템 종료 (<code>poweroff.target</code>, Halt)<br>
+          • <strong>1 (s, S):</strong> 단일 사용자 복구 모드 (<code>rescue.target</code>)<br>
+          • <strong>2:</strong> NFS 없는 다중 사용자 모드<br>
+          • <strong>3:</strong> <strong>다중 사용자 텍스트(CLI) 모드</strong> (<code>multi-user.target</code>)<br>
+          • <strong>4:</strong> 미사용 (사용자 정의)<br>
+          • <strong>5:</strong> <strong>다중 사용자 그래픽(GUI) 모드</strong> (<code>graphical.target</code>)<br>
+          • <strong>6:</strong> 재부팅 (<code>reboot.target</code>, Reboot)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 3 ================= -->
+  <section id="sec3" class="domain">
+    <div class="sec-title">
+      <h2>PART 3. 사용자 · 그룹 · 권한 · 배시(bash) 시작 스크립트</h2>
+      <span>인터랙티브 권한 계산기 &amp; 로그인 스크립트 실행 흐름도</span>
+    </div>
+
+    <!-- CARD 8 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>3-1. `/etc/passwd` &amp; `/etc/shadow` 필드 해부 및 계정 명령어 <span class="tag">옵션 대조</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <p style="font-size:0.84rem; font-weight:800;">👤 <code>/etc/passwd</code> (7개 필드, 모든 사용자 읽기 가능) vs 🔒 <code>/etc/shadow</code> (9개 필드, 해시 암호 보관·일반 사용자 읽기 차단)</p>
+      <div class="field-strip">
+        <div class="f-token ft-1">user1<span>① 계정명</span></div>
+        <div class="f-token ft-5">x<span>② 암호(/etc/shadow 이동표시)</span></div>
+        <div class="f-token ft-2">1000<span>③ UID (root는 0)</span></div>
+        <div class="f-token ft-3">1000<span>④ 기본 GID</span></div>
+        <div class="f-token ft-4">Hong Gil Dong<span>⑤ 주석(GECOS)</span></div>
+        <div class="f-token ft-6">/home/user1<span>⑥ 홈 디렉터리</span></div>
+        <div class="f-token ft-1">/bin/bash<span>⑦ 로그인 셸 (차단 시 /sbin/nologin)</span></div>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>명령어</th><th>핵심 옵션 (대소문자 함정 주의!)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong><code>useradd</code></strong></td>
+            <td><code>-u</code>(UID), <strong><code>-g</code>(1차 기본그룹)</strong>, <strong><code>-G</code>(2차 보조그룹)</strong>, <code>-d</code>(홈 경로), <code>-m</code>(홈 생성), <code>-k</code>(스켈레톤 경로, 기본은 <strong><code>/etc/skel</code></strong>), <code>-s</code>(셸), <code>-c</code>(주석), <code>-e</code>(만료일), <code>-f</code>(유예일), <strong><code>-D</code>(기본값 <code>/etc/default/useradd</code> 확인·변경)</strong></td>
+          </tr>
+          <tr>
+            <td><strong><code>usermod</code></strong></td>
+            <td><strong><code>-l 새이름 기존이름</code>(계정명 변경)</strong>, <code>-aG 그룹</code>(기존 보조그룹 유지하며 추가), <code>-d 새경로 -m</code>(홈 디렉터리 파일 이동), <code>-L</code>(잠금) / <code>-U</code>(잠금해제)</td>
+          </tr>
+          <tr>
+            <td><strong><code>userdel</code></strong></td>
+            <td>옵션 없으면 계정만 삭제(홈 남김) / <strong><code>userdel -r 계정명</code>: 홈 디렉터리와 메일 스풀까지 완전 삭제!</strong></td>
+          </tr>
+          <tr>
+            <td><strong><code>chage</code></strong></td>
+            <td>패스워드 만료 정책: <code>-l</code>(조회), <strong><code>-m</code>(최소 사용일)</strong>, <strong><code>-M</code>(최대 사용일)</strong>, <code>-W</code>(경고일), <code>-I</code>(유예일), <code>-E</code>(계정 만료일 YYYY-MM-DD)</td>
+          </tr>
+          <tr>
+            <td><strong>그룹 &amp; 전환</strong></td>
+            <td><code>groupadd</code>, <strong><code>groupmod -n 새이름 기존이름</code>(그룹명 변경)</strong>, <code>groupdel</code>, <code>gpasswd</code>(<code>-a</code> 추가, <code>-d</code> 제거, <code>-A</code> 관리자) / <strong><code>su - 계정</code>(환경변수까지 완전 전환)</strong> / <code>sudo</code>(설정 편집은 <strong><code>visudo</code></strong>)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CARD 9: 인터랙티브 권한 & umask 시뮬레이터 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>3-2. 권한(Permission) · 특수 권한 · 라이브 `umask` 계산기 <span class="tag purple">직접 눌러서 확인</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+
+      <div class="grid-3">
+        <div class="mini-box">
+          <h4>SetUID (8진수 <code>4000</code>, <code>u+s</code>)</h4>
+          <p>• 소유자 실행 자리에 <strong><code>s</code></strong> (원래 <code>x</code> 없으면 대문자 <strong><code>S</code></strong>)<br>
+          • 실행 중 <strong>파일 소유자(root) 권한</strong> 부여<br>
+          • 대표 파일: <strong><code>/usr/bin/passwd</code></strong> (<code>4755</code>)</p>
+        </div>
+        <div class="mini-box">
+          <h4>SetGID (8진수 <code>2000</code>, <code>g+s</code>)</h4>
+          <p>• 그룹 실행 자리에 <strong><code>s</code></strong> (<code>x</code> 없으면 <strong><code>S</code></strong>)<br>
+          • 디렉터리에 설정 시 내부 생성 파일의 <strong>소유 그룹이 디렉터리 그룹으로 자동 상속</strong></p>
+        </div>
+        <div class="mini-box">
+          <h4>Sticky Bit (8진수 <code>1000</code>, <code>o+t</code>)</h4>
+          <p>• 기타 실행 자리에 <strong><code>t</code></strong> (<code>x</code> 없으면 <strong><code>T</code></strong>)<br>
+          • <strong>파일 소유자·디렉터리 소유자·root만 삭제/이름변경 가능</strong><br>
+          • 대표 디렉터리: <strong><code>/tmp</code></strong> (<code>1777</code>, <code>drwxrwxrwt</code>)</p>
+        </div>
+      </div>
+
+      <!-- 인터랙티브 umask 시뮬레이터 -->
+      <div class="sim-panel">
+        <strong>🧮 인터랙티브 `umask` 비트 제거 시뮬레이터 (단순 뺄셈 함정 체험!)</strong>
+        <p style="font-size:0.8rem; color:var(--muted);">공식: <code>최종권한 = 기본모드 &amp; (~umask)</code>. 홀수 umask(예: <code>023</code>, <code>001</code>)를 입력해 일반 파일(기본 <code>666</code>)에서 왜 뺄셈이 틀리는지 바로 확인해 봐!</p>
+        <div class="sim-controls">
+          <label style="font-size:0.85rem; font-weight:700;">umask 입력 (3자리): <input type="text" id="umask-in" value="023" maxlength="3"></label>
+          <div class="sim-out" id="umask-file-out">일반 파일(666): 644 (rw-r--r--)</div>
+          <div class="sim-out" id="umask-dir-out">디렉터리(777): 754 (rwxr-xr--)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 10: bash 시작 설정 파일 순서 (보강 항목) -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>3-3. 배시(bash) 환경 설정 파일 실행 순서 플로우차트 <span class="tag purple">누락 완벽 보강</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <p style="font-size:0.84rem; margin-bottom:0.4rem;">시스템 전체 적용(<code>/etc/*</code>) vs 개인 사용자 적용(<code>~/*</code>), 그리고 <strong>로그인 셸(Login Shell)</strong>로 들어올 때의 실행 순서:</p>
+      <div class="flow-row">
+        <div class="flow-step" style="background:#dbeafe; border-color:#60a5fa;">① <code>/etc/profile</code><small>시스템 전체 로그인 환경변수<br>(<code>/etc/profile.d/*.sh</code> 호출)</small></div>
+        <div class="flow-arrow">➜</div>
+        <div class="flow-step" style="background:#ede9fe; border-color:#a78bfa;">② <code>~/.bash_profile</code><small>개인 로그인 설정<br>(없으면 <code>~/.bash_login</code> → <code>~/.profile</code> 순 탐색)</small></div>
+        <div class="flow-arrow">➜</div>
+        <div class="flow-step" style="background:#d1fae5; border-color:#34d399;">③ <code>~/.bashrc</code><small>개인 별칭(alias)·함수<br>(비로그인 새 터미널 열 때도 실행)</small></div>
+        <div class="flow-arrow">➜</div>
+        <div class="flow-step" style="background:#fef3c7; border-color:#fbbf24;">④ <code>/etc/bashrc</code><small>시스템 전체 별칭·셸 함수<br>(데비안은 <code>/etc/bash.bashrc</code>)</small></div>
+      </div>
+      <p style="font-size:0.82rem; color:var(--muted);">※ 로그아웃 시 실행되는 파일: <strong><code>~/.bash_logout</code></strong> | 수정한 설정 파일을 재로그인 없이 현재 셸에 즉시 반영하는 명령어: <strong><code>source 파일명</code></strong> (또는 <strong><code>. 파일명</code></strong>)</p>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 4 ================= -->
+  <section id="sec4" class="domain">
+    <div class="sec-title">
+      <h2>PART 4. 디렉터리 · 파일 조작 · 링크 · 검색 · 압축</h2>
+      <span>FHS 트리 맵 &amp; 하드링크 vs 심볼릭링크 직관 비교</span>
+    </div>
+
+    <!-- CARD 11 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>4-1. 리눅스 최상위 디렉터리 맵 (FHS) <span class="tag">한눈에 보기</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="grid-4">
+        <div class="mini-box"><h4><code>/bin</code> &amp; <code>/sbin</code></h4><p>필수 기본 명령어(<code>/bin</code>) vs <strong>시스템 관리자용 명령어(<code>/sbin</code>: fdisk, fsck 등)</strong></p></div>
+        <div class="mini-box"><h4><code>/etc</code></h4><p><strong>시스템 환경 설정 파일</strong> 모음 (passwd, fstab, resolv.conf 등)</p></div>
+        <div class="mini-box"><h4><code>/proc</code> ⭐</h4><p>디스크가 아닌 <strong>메모리 기반 가상 파일시스템</strong> (실시간 프로세스·cpuinfo·meminfo)</p></div>
+        <div class="mini-box"><h4><code>/var</code></h4><p><strong>가변 데이터</strong>: 시스템 로그(<code>/var/log</code>), 메일/프린터 스풀(<code>/var/spool</code>)</p></div>
+        <div class="mini-box"><h4><code>/dev</code></h4><p>하드웨어 장치 파일 (<code>sda</code>, <code>tty</code>, 블랙홀 <code>/dev/null</code>)</p></div>
+        <div class="mini-box"><h4><code>/tmp</code></h4><p>공용 임시 파일 디렉터리 (Sticky Bit 적용: <strong><code>1777</code></strong>)</p></div>
+        <div class="mini-box"><h4><code>/root</code> vs <code>/home</code></h4><p>관리자 root 전용 홈(<code>/root</code>) vs 일반 사용자 홈(<code>/home/계정</code>)</p></div>
+        <div class="mini-box"><h4><code>/lost+found</code></h4><p>비정상 종료 후 <code>fsck</code>가 복구한 고아 파일 조각 보관소</p></div>
+      </div>
+    </div>
+
+    <!-- CARD 12 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>4-2. 하드 링크(Hard Link) vs 심볼릭 링크(Symbolic Link) 구조도 <span class="tag purple">100% 구분</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="grid-2">
+        <div class="mini-box" style="border-left:4px solid var(--primary);">
+          <h4>🔗 하드 링크: <code>ln a.txt hard.txt</code></h4>
+          <p style="font-family:monospace; background:#e2e8f0; padding:0.4rem; border-radius:6px; margin:0.4rem 0;">
+            [a.txt] ──┐<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├──▶ [동일 inode #105] ──▶ [실제 데이터 블록]<br>
+            [hard.txt]┘
+          </p>
+          <p>• <strong>원본과 inode 번호가 완전히 같음!</strong><br>
+          • <strong>원본(a.txt)을 삭제해도 hard.txt로 데이터 정상 읽기 가능!</strong><br>
+          • <strong>제약:</strong> 다른 파티션(파일시스템) 간 생성 불가, 디렉터리 대상 생성 불가.</p>
+        </div>
+        <div class="mini-box" style="border-left:4px solid var(--accent);">
+          <h4>👉 심볼릭 링크: <code>ln -s a.txt sym.txt</code></h4>
+          <p style="font-family:monospace; background:#e2e8f0; padding:0.4rem; border-radius:6px; margin:0.4rem 0;">
+            [sym.txt (새 inode #209, l---------)] ──(경로 가리킴)──▶ [a.txt (#105)]
+          </p>
+          <p>• 윈도우 '바로가기' 개념. <strong>원본과 다른 새로운 inode 생성.</strong><br>
+          • <strong>원본(a.txt)을 삭제하면 깨진 링크가 되어 접근 불가!</strong><br>
+          • <strong>장점:</strong> 다른 파티션 간 생성 가능, 디렉터리 대상 생성 가능.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 13 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>4-3. 파일 조작 · `find` 검색 · `tar` 아카이브 &amp; 압축률 서열 <span class="tag">필수 옵션</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="grid-2">
+        <div class="mini-box">
+          <h4>파일/디렉터리 조작 핵심 옵션</h4>
+          <p>• <strong><code>ls</code>:</strong> <code>-a</code>(숨김파일 모두), <code>-l</code>(상세), <code>-i</code>(inode 번호), <code>-d</code>(디렉터리 자체 정보), <code>-R</code>(하위 재귀), <code>-F</code>(파일유형 기호: 디렉터리<code>/</code>, 실행<code>*</code>, 링크<code>@</code>)<br>
+          • <strong><code>mkdir -p a/b/c</code>:</strong> 중간 상위 디렉터리까지 한 번에 생성<br>
+          • <strong><code>rmdir</code>:</strong> <strong>비어있는 디렉터리만</strong> 삭제 가능 (파일 있으면 <code>rm -rf</code>)<br>
+          • <strong><code>cp</code>:</strong> <code>-r</code>(디렉터리 복사), <strong><code>-p</code>(소유자·권한·시간 보존)</strong>, <strong><code>-a</code>(아카이브 완벽 보존)</strong><br>
+          • <strong><code>touch</code>:</strong> 빈 파일(0B) 생성 또는 <strong>기존 파일의 시간(atime/mtime)만 갱신(내용 삭제 안 함!)</strong></p>
+        </div>
+        <div class="mini-box">
+          <h4>📦 압축률 서열 &amp; `tar` 옵션 공식</h4>
+          <p>• <strong>압축률(낮음→높음):</strong> <code>compress(.Z)</code> &lt; <strong><code>gzip(.gz)</code> &lt; <code>bzip2(.bz2)</code> &lt; <code>xz(.xz)</code></strong> (<strong>xz가 압축률 최고!</strong>)<br>
+          • <strong><code>tar</code> 동작:</strong> <code>-c</code>(생성), <code>-x</code>(해제), <code>-t</code>(목록확인), <code>-r</code>(파일추가)<br>
+          • <strong><code>tar</code> 압축 옵션:</strong> <strong><code>-z</code>(gzip)</strong>, <strong><code>-j</code>(bzip2)</strong>, <strong><code>-J</code>(대문자, xz)</strong><br>
+          • <strong><code>-f 파일명</code>:</strong> <code>-f</code> 바로 뒤에 아카이브 파일명이 인수로 와야 함! (<code>-C 경로</code>: 풀 디렉터리 지정)</p>
+        </div>
+      </div>
+      <pre># 실시간 파일 검색의 제왕 find 핵심 패턴
+find /var/log -name "*.log" -type f -size +50M -mtime +7 -exec rm -f {} \;
+# -name(이름), -user(소유자), -type(f:일반파일, d:디렉터리, l:링크), -size(+초과/-미만), -perm(권한), -mtime(수정일수), -exec 명령 {} \;</pre>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 5 ================= -->
+  <section id="sec5" class="domain">
+    <div class="sec-title">
+      <h2>PART 5. 텍스트 · `vi` · 프로세스 · 네트워크 · 통신/기타 명령어</h2>
+      <span>파이프라인 도식화 + vi 키캡 + 지엽적 네트워크/통신 완벽 커버</span>
+    </div>
+
+    <!-- CARD 14 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>5-1. 텍스트 필터 파이프라인 &amp; 리다이렉션 도식 <span class="tag">옵션 구분</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="flow-row">
+        <div class="flow-step"><code>cat</code> / <code>head</code> / <code>tail -f</code><small><code>cat -n</code>(전체 행번호)<br><code>cat -b</code>(빈줄 제외 번호)<br><code>tail -f</code>(실시간 로그 추적)</small></div>
+        <div class="flow-arrow">|</div>
+        <div class="flow-step"><code>grep</code> (패턴 행 검색)<small><code>-i</code>(대소문자무시) <code>-v</code>(제외 반전)<br><code>-n</code>(줄번호) <code>-c</code>(줄개수) <code>-l</code>(파일명)</small></div>
+        <div class="flow-arrow">|</div>
+        <div class="flow-step"><code>cut</code> (열/필드 추출)<small><strong><code>-d 구분자</code></strong> (예: <code>-d :</code>)<br><strong><code>-f 필드번호</code></strong> (예: <code>-f 1,7</code>)</small></div>
+        <div class="flow-arrow">|</div>
+        <div class="flow-step"><code>sort</code> &amp; <code>uniq</code><small><code>sort</code>: <strong><code>-t 구분자</code></strong>, <code>-k 열</code>, <code>-n</code>(숫자), <code>-r</code>(역순)<br><code>uniq</code>: 연속 중복행 제거(<code>-c</code> 빈도)</small></div>
+        <div class="flow-arrow">|</div>
+        <div class="flow-step"><code>wc</code> / <code>tee</code><small><code>wc</code>: <code>-l</code>(줄) <code>-w</code>(단어) <code>-c</code>(바이트)<br><strong><code>tee</code>: 화면 출력 + 파일 동시 저장</strong></small></div>
+      </div>
+      <div class="trap">
+        <strong>🚨 구분자 옵션 비교 함정:</strong> 필드 구분자를 지정할 때 <strong><code>cut</code>은 <code>-d</code></strong>를 쓰지만, <strong><code>sort</code>는 <code>-t</code></strong>를 쓴다! / 리다이렉션: <code>&gt;</code>(덮어쓰기), <code>&gt;&gt;</code>(이어쓰기), <code>0</code>(표준입력), <code>1</code>(표준출력), <code>2</code>(표준에러, <code>2&gt;/dev/null</code>).
+      </div>
+    </div>
+
+    <!-- CARD 15: vi 키캡 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>5-2. `vi` (`vim`) 편집기 비주얼 치트시트 <span class="tag purple">키캡으로 암기</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="keycap-grid">
+        <div class="key-card"><span class="key">i / a</span><span>커서 앞(i) / 뒤(a) 입력</span></div>
+        <div class="key-card"><span class="key">I / A</span><span>줄 맨 앞(I) / 맨 끝(A) 입력</span></div>
+        <div class="key-card"><span class="key">o / O</span><span>아래 줄(o) / <strong>위 줄(O)</strong> 삽입</span></div>
+        <div class="key-card"><span class="key">0 / $</span><span>줄 맨 앞(0,^) / <strong>맨 끝($)</strong> 이동</span></div>
+        <div class="key-card"><span class="key">gg / G</span><span>문서 첫 줄(gg) / <strong>끝 줄(G)</strong></span></div>
+        <div class="key-card"><span class="key">dd / 3dd</span><span>현재 행 삭제(잘라내기)</span></div>
+        <div class="key-card"><span class="key">yy / p</span><span>행 복사(yy) / 아래 붙여넣기(p)</span></div>
+        <div class="key-card"><span class="key">u / .</span><span>실행 취소(Undo) / 직전 반복(.)</span></div>
+        <div class="key-card"><span class="key">:wq / ZZ</span><span>저장 후 종료 (강제종료 <code>:q!</code>)</span></div>
+        <div class="key-card"><span class="key">:set nu</span><span><strong>행 번호 표시</strong> (해제 <code>:set nonu</code>)</span></div>
+        <div class="key-card"><span class="key">:set ai</span><span>자동 들여쓰기 (<code>:set ic</code> 대소문자무시)</span></div>
+        <div class="key-card"><span class="key">:%s/A/B/g</span><span>문서 전체 A를 B로 일괄 치환</span></div>
+      </div>
+    </div>
+
+    <!-- CARD 16 -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>5-3. 프로세스 · 시그널(Signal) · 우선순위(Nice) <span class="tag">시그널 번호 필수</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="grid-2">
+        <div class="mini-box">
+          <h4>필수 시그널 번호 5총사</h4>
+          <p>• <strong>1번 <code>SIGHUP</code>:</strong> 터미널 연결 끊김 (기본은 종료이나, 데몬에서는 <strong>설정 파일 재읽기 Reload</strong>에 활용 / 로그아웃 무시 실행은 <strong><code>nohup 명령 &amp;</code></strong>)<br>
+          • <strong>2번 <code>SIGINT</code>:</strong> <strong><code>Ctrl + C</code></strong> (포그라운드 작업 중단/종료)<br>
+          • <strong>9번 <code>SIGKILL</code>:</strong> <strong>즉시 강제 종료</strong> (<code>kill -9 PID</code>, 무시 불가)<br>
+          • <strong>15번 <code>SIGTERM</code>:</strong> <strong><code>kill</code> 명령의 기본(Default) 시그널!</strong> (정상 종료 요청)<br>
+          • <strong>20번 <code>SIGTSTP</code>:</strong> <strong><code>Ctrl + Z</code></strong> (일시 중지 → <code>jobs</code> 확인 → <code>bg</code> / <code>fg</code> 전환)</p>
+        </div>
+        <div class="mini-box">
+          <h4>우선순위 `nice` vs `renice` (범위: `-20` ~ `19`)</h4>
+          <p>• <strong>숫자가 작을수록(<code>-20</code>) 우선순위가 가장 높음!</strong> (기본값 <code>0</code>)<br>
+          • 음수(우선순위 상향) 설정은 오직 <strong><code>root</code>만 가능</strong>.<br>
+          • <strong><code>nice -n 10 명령어</code>:</strong> 새 프로세스 실행 시 조정 (옵션 생략 시 기본 +10)<br>
+          • <strong><code>renice -n -5 -p PID</code>:</strong> <strong>이미 실행 중인 프로세스</strong>의 NI값을 PID로 변경<br>
+          • ※ <code>kill</code>은 <strong>PID</strong> 대상, <code>killall</code> / <code>pkill</code>은 <strong>프로세스 이름</strong> 대상!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 17: 네트워크 설정 파일 + 통신/날짜/기타 명령어 (보강 항목) -->
+    <div class="card searchable-block">
+      <div class="card-head">
+        <h3>5-4. 네트워크 설정 파일 &amp; 사용자 통신·날짜·시스템 명령어 <span class="tag purple">누락 완벽 보강</span></h3>
+        <button class="check-btn" onclick="toggleMastery(this)">✔ 암기 완료</button>
+      </div>
+      <div class="grid-3">
+        <div class="mini-box">
+          <h4>🌐 네트워크 핵심 설정 파일</h4>
+          <p>• <strong><code>/etc/resolv.conf</code>:</strong> DNS 네임서버 지정 (<code>nameserver 8.8.8.8</code>)<br>
+          • <strong><code>/etc/hosts</code>:</strong> 로컬 IP ↔ 호스트명 매핑<br>
+          • <strong><code>/etc/sysconfig/network-scripts/ifcfg-eth0</code></strong> (RHEL 계열 인터페이스 설정):<br>
+          &nbsp;&nbsp;- <code>BOOTPROTO=none(static)</code> 또는 <code>dhcp</code><br>
+          &nbsp;&nbsp;- <code>ONBOOT=yes</code> (부팅 시 자동 활성화)<br>
+          &nbsp;&nbsp;- <code>IPADDR</code>, <code>NETMASK</code>, <code>GATEWAY</code>, <code>DNS1</code><br>
+          • DNS 질의: <strong><code>nslookup</code>, <code>dig</code>, <code>host</code></strong><br>
+          • 라우팅/상태: <code>ifconfig</code>/<code>ip</code>, <code>route</code>(게이트웨이), <code>netstat</code>/<code>ss</code>, <code>ping</code>, <code>traceroute</code></p>
+        </div>
+        <div class="mini-box">
+          <h4>💬 사용자 간 통신 &amp; 프린터 명령</h4>
+          <p>• <strong><code>wall</code>:</strong> 현재 로그인한 <strong>모든 사용자</strong> 터미널에 전체 공지 메시지 전송<br>
+          • <strong><code>write 계정명</code>:</strong> 특정 로그인 사용자에게 실시간 메시지 전송 (종료 <code>Ctrl+D</code>)<br>
+          • <strong><code>talk 계정명</code>:</strong> 화면을 위아래로 나누어 1:1 채팅<br>
+          • <strong><code>mesg y</code> / <code>mesg n</code>:</strong> 일반 사용자의 <code>write</code> 메시지 <strong>수신 허용(y) / 거부(n)</strong> 설정 (단, root가 보내는 메시지는 거부 불가)<br>
+          • <strong>인쇄(CUPS/LPR):</strong> <code>lp</code> / <code>lpr</code>(인쇄 요청), <code>lpq</code> / <code>lpstat</code>(대기열 확인), <code>cancel</code> / <code>lprm</code>(인쇄 취소)</p>
+        </div>
+        <div class="mini-box">
+          <h4>🕒 날짜·시스템·환경변수·히스토리</h4>
+          <p>• <strong><code>date</code>:</strong> 시스템 날짜/시간 출력 및 변경 (하드웨어 CMOS 시간 동기화는 <code>hwclock</code> / <code>rdate</code>)<br>
+          • <strong><code>cal</code>:</strong> 달력 출력 (<code>cal 2026</code>, <code>cal 10 2026</code>)<br>
+          • <strong><code>uname -a</code>:</strong> 커널 이름·버전·아키텍처 출력 (<code>-r</code>은 커널 릴리스 버전만)<br>
+          • <strong><code>export VAR=값</code>:</strong> 전역 환경변수 등록 (조회: <code>env</code>, <code>printenv</code> / 해제: <code>unset</code>)<br>
+          • <strong><code>alias ll='ls -l'</code></strong> ↔ 해제: <strong><code>unalias ll</code></strong><br>
+          • <strong>히스토리:</strong> <strong><code>!!</code>(직전 명령 실행)</strong>, <code>!번호</code>, <code>!문자열</code></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SECTION 6: 25 QUIZ ================= -->
+  <section id="sec6" class="domain">
+    <div class="sec-title">
+      <h2>PART 6. 전 범위 스피드 실전 모의고사 (25문항)</h2>
+      <span>보강된 지엽적 문항까지 완벽 수록 · 클릭 즉시 채점</span>
+    </div>
+
+    <div id="quiz-list">
+      <div class="quiz-card searchable-block" data-ans="3">
+        <div class="quiz-q">Q1. 리눅스의 역사와 커널 구조에 대한 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q1" value="1"> ① 최초의 UNIX는 1969년 데니스 리치가 처음부터 C언어로 개발하였다.</label>
+          <label><input type="radio" name="q1" value="2"> ② 리눅스 커널은 모놀리식 커널이므로 실행 중 모듈을 동적으로 추가하거나 제거할 수 없다.</label>
+          <label><input type="radio" name="q1" value="3"> ③ 리처드 스톨먼은 1983년 GNU 프로젝트를 시작하고, 1985년 자유 소프트웨어 재단(FSF)을 설립하였다.</label>
+          <label><input type="radio" name="q1" value="4"> ④ 하드웨어 자원을 직접 제어하는 것은 셸(Shell)이며, 커널은 단순 명령어 해석기이다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ③</strong> | ① 1969년 최초 UNIX는 어셈블리어였고 1973년에 C언어로 재작성됨. ② 리눅스는 <code>modprobe</code> 등으로 동적 커널 모듈(LKM) 적재가 가능함. ④ 하드웨어 제어는 커널, 명령어 해석은 셸의 역할.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="2">
+        <div class="quiz-q">Q2. 오픈소스 라이선스에 대한 설명으로 가장 올바른 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q2" value="1"> ① GPL 소프트웨어를 기업 내부에서만 수정해 사용하고 외부에 배포하지 않더라도 수정 소스를 즉시 대중에게 공개해야 한다.</label>
+          <label><input type="radio" name="q2" value="2"> ② LGPL 라이브러리를 수정 없이 단순 동적 링크(Dynamic Linking)하여 개발한 상용 프로그램은 배포 시 자체 소스코드를 공개하지 않아도 된다.</label>
+          <label><input type="radio" name="q2" value="3"> ③ BSD 및 MIT 라이선스는 파생물 배포 시 반드시 전체 소스코드를 공개해야 하는 강한 카피레프트 라이선스이다.</label>
+          <label><input type="radio" name="q2" value="4"> ④ 자유 소프트웨어(Free Software)는 상업적 유료 판매가 법적으로 금지되어 있다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ②</strong> | ① GPL 공개 의무는 외부에 '배포'할 때만 발생함. ③ BSD/MIT는 비공개 상용화가 가능한 허용적(Permissive) 라이선스. ④ 상업적 판매도 허용됨.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="4">
+        <div class="quiz-q">Q3. 리눅스 배포판에 대한 설명으로 틀린 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q3" value="1"> ① Slackware는 1993년 패트릭 볼커딩이 공개한 현존 최고령 배포판이다.</label>
+          <label><input type="radio" name="q3" value="2"> ② Debian은 이안 머독이 창시했으며 패키지 관리 도구로 dpkg와 apt를 사용한다.</label>
+          <label><input type="radio" name="q3" value="3"> ③ RHEL, Fedora, CentOS, Rocky Linux는 모두 레드햇(.rpm) 계열에 속한다.</label>
+          <label><input type="radio" name="q3" value="4"> ④ Ubuntu와 Kali Linux는 슬랙웨어 계열에서 파생되었으며 기본 패키지 관리자는 yum이다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ④</strong> | Ubuntu와 Kali Linux는 데비안(Debian) 계열이며 <code>dpkg</code>, <code>apt</code>를 사용한다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="3">
+        <div class="quiz-q">Q4. MBR(msdos) 디스크인 <code>/dev/sda</code>에 주 파티션 1개와 확장 파티션 1개를 만든 뒤, 그 안에 첫 번째 논리 파티션을 생성했을 때 부여되는 장치명은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q4" value="1"> ① /dev/sda2</label>
+          <label><input type="radio" name="q4" value="2"> ② /dev/sda3</label>
+          <label><input type="radio" name="q4" value="3"> ③ /dev/sda5</label>
+          <label><input type="radio" name="q4" value="4"> ④ /dev/sda1p1</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ③</strong> | MBR에서 1~4번은 주/확장 파티션 예약 번호이므로 논리 파티션은 무조건 <strong>5번(<code>/dev/sda5</code>)</strong>부터 시작한다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="1">
+        <div class="quiz-q">Q5. 디스크, GPT 파티션, 파일 시스템에 대한 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q5" value="1"> ① XFS는 고성능 64비트 저널링 파일 시스템으로 RHEL 7 이후 기본 파일 시스템으로 사용된다.</label>
+          <label><input type="radio" name="q5" value="2"> ② ext2, ext3, ext4는 모두 저널링(Journaling)을 지원하는 파일 시스템이다.</label>
+          <label><input type="radio" name="q5" value="3"> ③ GPT 디스크는 BIOS 환경에서는 GRUB을 사용하더라도 절대 부팅할 수 없다.</label>
+          <label><input type="radio" name="q5" value="4"> ④ PATA(IDE) 고속 케이블은 80핀 커넥터에 80가닥 전선으로 구성된다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ①</strong> | ② <code>ext2</code>는 비저널링 파일 시스템이다. ③ GRUB의 BIOS Boot Partition을 통해 BIOS에서도 GPT 부팅이 가능하다. ④ 40핀 커넥터에 80가닥 전선이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="2">
+        <div class="quiz-q">Q6. <code>/etc/fstab</code> 파일의 6개 필드 구조와 옵션에 대한 설명으로 틀린 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q6" value="1"> ① 필드 순서는 [장치명/UUID] - [마운트포인트] - [파일시스템종류] - [옵션] - [dump] - [fsck순서] 이다.</label>
+          <label><input type="radio" name="q6" value="2"> ② 6번째 필드(fsck 점검 순서) 값을 <code>1</code>로 설정하면 부팅 시 파일 시스템 점검을 생략한다.</label>
+          <label><input type="radio" name="q6" value="3"> ③ 4번째 필드의 <code>defaults</code> 옵션은 rw, suid, dev, exec, auto, nouser, async 속성을 포함한다.</label>
+          <label><input type="radio" name="q6" value="4"> ④ 현재 시스템에 실제로 마운트되어 있는 상태 목록을 기록하는 파일은 <code>/etc/mtab</code>이다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ②</strong> | 6번째 필드 값이 <strong><code>0</code>일 때 점검을 생략</strong>하며, <code>1</code>은 루트(<code>/</code>) 파일시스템 최우선 점검, <code>2</code>는 그 외 파일시스템 점검이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="4">
+        <div class="quiz-q">Q7. 부트 매니저 GRUB과 런레벨(Runlevel)에 대한 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q7" value="1"> ① 런레벨 3은 그래픽 모드(GUI)이고, 런레벨 5는 텍스트 다중 사용자 모드(CLI)이다.</label>
+          <label><input type="radio" name="q7" value="2"> ② GRUB 2에서도 첫 번째 디스크의 첫 번째 파티션은 <code>(hd0,0)</code>으로 표기한다.</label>
+          <label><input type="radio" name="q7" value="3"> ③ 부트 메뉴에서 <code>e</code> 키를 눌러 수정한 커널 옵션은 재부팅 후에도 영구 저장된다.</label>
+          <label><input type="radio" name="q7" value="4"> ④ GRUB Legacy는 파티션 번호가 0번부터 시작하고, GRUB 2는 파티션 번호가 1번부터 시작한다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ④</strong> | 런레벨 3이 CLI(<code>multi-user.target</code>), 런레벨 5가 GUI(<code>graphical.target</code>)이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="3">
+        <div class="quiz-q">Q8. 사용자 관리 명령어와 관련 파일에 대한 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q8" value="1"> ① <code>useradd</code>에서 <code>-G</code>는 1차(기본) 그룹을 지정하고, <code>-g</code>는 2차(보조) 그룹을 지정한다.</label>
+          <label><input type="radio" name="q8" value="2"> ② 사용자의 로그인 계정 이름을 변경할 때는 <code>usermod -n 새이름 기존이름</code>을 사용한다.</label>
+          <label><input type="radio" name="q8" value="3"> ③ 사용자의 홈 디렉터리와 메일 스풀까지 함께 삭제하려면 <code>userdel -r 계정명</code>을 실행한다.</label>
+          <label><input type="radio" name="q8" value="4"> ④ 신규 사용자 생성 시 홈 디렉터리에 기본 환경 파일을 복사해 주는 템플릿 디렉터리는 <code>/etc/login.defs</code>이다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ③</strong> | ① 소문자 <code>-g</code>가 1차 기본그룹, 대문자 <code>-G</code>가 2차 보조그룹. ② 계정명 변경은 <code>usermod -l</code>(<code>-n</code>은 <code>groupmod</code>). ④ 템플릿 디렉터리는 <code>/etc/skel</code>이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="2">
+        <div class="quiz-q">Q9. 현재 <code>umask</code> 값이 <code>0023</code>일 때, 새로 생성되는 일반 파일(기본 <code>0666</code>)과 디렉터리(기본 <code>0777</code>)의 8진수 권한은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q9" value="1"> ① 파일: 643, 디렉터리: 754</label>
+          <label><input type="radio" name="q9" value="2"> ② 파일: 644, 디렉터리: 754</label>
+          <label><input type="radio" name="q9" value="3"> ③ 파일: 644, 디렉터리: 755</label>
+          <label><input type="radio" name="q9" value="4"> ④ 파일: 666, 디렉터리: 755</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ②</strong> | 일반 파일(<code>666</code> = <code>rw-rw-rw-</code>)은 원래 실행(<code>x=1</code>) 비트가 없으므로 기타 사용자의 <code>3(w+x)</code> 비트를 제거하면 <code>w(2)</code>만 빠져 <strong><code>644</code></strong>가 된다. 디렉터리(<code>777</code>)는 <strong><code>754</code></strong>가 된다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="1">
+        <div class="quiz-q">Q10. 특수 권한(SetUID, SetGID, Sticky Bit)에 대한 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q10" value="1"> ① <code>/tmp</code> 디렉터리에는 Sticky Bit(1000)가 설정되어 있어 파일 소유자, 디렉터리 소유자, root만 파일을 삭제할 수 있다.</label>
+          <label><input type="radio" name="q10" value="2"> ② <code>/usr/bin/passwd</code> 명령어에는 일반 사용자의 암호 변경을 위해 SetGID(2000)가 설정되어 있다.</label>
+          <label><input type="radio" name="q10" value="3"> ③ 실행 권한(<code>x</code>)이 없는 파일에 SetUID를 부여하면 소문자 <code>s</code>로 표시된다.</label>
+          <label><input type="radio" name="q10" value="4"> ④ SetUID의 8진수 값은 1000이고 Sticky Bit의 8진수 값은 4000이다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ①</strong> | ② <code>/usr/bin/passwd</code>는 SetUID(4000)가 설정됨. ③ 원래 <code>x</code>가 없으면 대문자 <code>S</code> 또는 <code>T</code>로 표시됨.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="4">
+        <div class="quiz-q">Q11. 사용자가 텍스트 콘솔에서 로그인(Login Shell)할 때 <code>bash</code>가 가장 먼저 실행하는 시스템 전역 프로파일 설정 파일은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q11" value="1"> ① ~/.bashrc</label>
+          <label><input type="radio" name="q11" value="2"> ② ~/.bash_logout</label>
+          <label><input type="radio" name="q11" value="3"> ③ /etc/fstab</label>
+          <label><input type="radio" name="q11" value="4"> ④ /etc/profile</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ④</strong> | 로그인 시 <code>/etc/profile</code>이 가장 먼저 실행된 후 <code>~/.bash_profile</code> → <code>~/.bashrc</code> → <code>/etc/bashrc</code> 순으로 호출된다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="3">
+        <div class="quiz-q">Q12. 하드 링크와 심볼릭 링크에 대한 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q12" value="1"> ① 하드 링크는 원본 파일과 다른 새로운 inode 번호를 부여받는다.</label>
+          <label><input type="radio" name="q12" value="2"> ② 심볼릭 링크는 원본 파일을 삭제하더라도 링크 파일을 통해 원본 데이터를 그대로 읽을 수 있다.</label>
+          <label><input type="radio" name="q12" value="3"> ③ 심볼릭 링크(<code>ln -s</code>)는 디렉터리에 대해서도 생성할 수 있으며 다른 파일 시스템(파티션) 간에도 생성 가능하다.</label>
+          <label><input type="radio" name="q12" value="4"> ④ 하드 링크는 서로 다른 파티션 간에도 자유롭게 생성할 수 있다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ③</strong> | 하드 링크는 동일 inode를 공유하며 원본 삭제 시에도 읽을 수 있지만, 다른 파티션 간 및 디렉터리 대상 생성은 불가능하다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="2">
+        <div class="quiz-q">Q13. 디렉터리 및 파일 명령어에 대한 설명으로 틀린 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q13" value="1"> ① <code>mkdir -p a/b/c</code>는 상위 디렉터리가 없어도 한 번에 계층적으로 생성한다.</label>
+          <label><input type="radio" name="q13" value="2"> ② 이미 내용이 있는 파일에 <code>touch</code> 명령을 실행하면 파일 내용이 모두 삭제되고 0바이트로 초기화된다.</label>
+          <label><input type="radio" name="q13" value="3"> ③ <code>rmdir</code> 명령은 비어 있는 디렉터리만 삭제할 수 있다.</label>
+          <label><input type="radio" name="q13" value="4"> ④ <code>cp -p</code> 옵션은 원본 파일의 소유자, 그룹, 권한, 타임스탬프를 보존하여 복사한다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ②</strong> | 기존 파일에 <code>touch</code>를 실행하면 내용은 유지된 채 시간 정보(atime, mtime)만 갱신된다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="1">
+        <div class="quiz-q">Q14. 압축 유틸리티와 <code>tar</code> 명령어에 대한 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q14" value="1"> ① 일반적인 압축률은 <code>xz &gt; bzip2 &gt; gzip</code> 순서로 <code>xz</code>가 가장 높으며, <code>tar</code>에서 <code>xz</code> 압축 옵션은 대문자 <code>-J</code>이다.</label>
+          <label><input type="radio" name="q14" value="2"> ② <code>tar</code>에서 <code>bzip2</code> 압축 옵션은 <code>-z</code>이고, <code>gzip</code> 압축 옵션은 <code>-j</code>이다.</label>
+          <label><input type="radio" name="q14" value="3"> ③ 아카이브를 풀지 않고 내부 파일 목록만 확인할 때는 <code>tar -xvf</code>를 사용한다.</label>
+          <label><input type="radio" name="q14" value="4"> ④ <code>tar -f backup.tar -cv dir/</code>처럼 <code>-f</code> 뒤에 다른 옵션이 오면 실행되지 않는다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ①</strong> | ② <code>gzip</code>은 <code>-z</code>, <code>bzip2</code>는 <code>-j</code>, <code>xz</code>는 <code>-J</code>이다. ③ 목록 확인은 <code>-t</code>이다. ④ <code>-f</code> 바로 뒤에 아카이브 파일명이 왔으므로 정상 실행된다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="4">
+        <div class="quiz-q">Q15. 현재 디렉터리 하위에서 소유자가 <code>root</code>이고 권한이 <code>4755</code>인 일반 파일을 찾는 올바른 <code>find</code> 명령어는?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q15" value="1"> ① find . -name root -mode 4755 -type f</label>
+          <label><input type="radio" name="q15" value="2"> ② find . -uid root -chmod 4755 -type d</label>
+          <label><input type="radio" name="q15" value="3"> ③ find . -owner root -perm 4755 -file f</label>
+          <label><input type="radio" name="q15" value="4"> ④ find . -user root -perm 4755 -type f</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ④</strong> | 소유자 이름 검색은 <code>-user</code>, 권한 검색은 <code>-perm</code>, 일반 파일 유형은 <code>-type f</code>이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="3">
+        <div class="quiz-q">Q16. 텍스트 처리 명령어의 옵션 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q16" value="1"> ① <code>cat -b file.txt</code>는 빈 줄을 포함한 모든 줄에 줄 번호를 붙여서 출력한다.</label>
+          <label><input type="radio" name="q16" value="2"> ② <code>grep -v "root" /etc/passwd</code>는 대소문자 구분 없이 "root"가 포함된 행만 출력한다.</label>
+          <label><input type="radio" name="q16" value="3"> ③ 필드 구분자를 지정할 때 <code>cut</code> 명령어는 <code>-d</code> 옵션을 쓰고, <code>sort</code> 명령어는 <code>-t</code> 옵션을 쓴다.</label>
+          <label><input type="radio" name="q16" value="4"> ④ <code>wc -c</code>는 파일의 전체 행(Line) 수를 출력한다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ③</strong> | ① 빈 줄 제외 행 번호는 <code>cat -b</code>, 빈 줄 포함 전체 행 번호는 <code>cat -n</code>이다. ② <code>grep -v</code>는 해당 패턴을 제외한 행을 반전 출력한다. ④ 행 수는 <code>wc -l</code>이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="2">
+        <div class="quiz-q">Q17. <code>vi</code> 편집기에서 행 번호를 표시하는 실행 모드 명령(㉠)과, 현재 커서 줄 바로 위에 빈 줄을 삽입하며 입력 모드로 전환하는 명령키(㉡)의 조합은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q17" value="1"> ① ㉠ :set ai / ㉡ o (소문자)</label>
+          <label><input type="radio" name="q17" value="2"> ② ㉠ :set nu / ㉡ O (대문자)</label>
+          <label><input type="radio" name="q17" value="3"> ③ ㉠ :set ic / ㉡ I (대문자)</label>
+          <label><input type="radio" name="q17" value="4"> ④ ㉠ :set nonu / ㉡ A (대문자)</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ②</strong> | 행 번호 표시는 <code>:set number</code>(<code>:set nu</code>)이며, 윗줄 삽입은 대문자 <code>O</code>(아랫줄은 소문자 <code>o</code>)이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="4">
+        <div class="quiz-q">Q18. 프로세스 시그널과 작업 제어에 대한 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q18" value="1"> ① 옵션 없이 <code>kill 1234</code>를 실행하면 강제 종료 시그널인 9번(SIGKILL)이 전달된다.</label>
+          <label><input type="radio" name="q18" value="2"> ② <code>kill</code> 명령어는 프로세스 이름을 인수로 받고, <code>killall</code>은 PID를 인수로 받는다.</label>
+          <label><input type="radio" name="q18" value="3"> ③ <code>Ctrl + C</code>를 누르면 일시 정지 시그널인 SIGTSTP(20번)가 발생한다.</label>
+          <label><input type="radio" name="q18" value="4"> ④ 사용자가 로그아웃(터미널 종료)해도 백그라운드 프로세스가 끊기지 않고 계속 실행되게 하려면 <code>nohup 명령어 &amp;</code>를 사용한다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ④</strong> | ① <code>kill</code>의 기본 시그널은 15번(SIGTERM)이다. ② <code>kill</code>이 PID, <code>killall</code>이 프로세스 이름을 받는다. ③ <code>Ctrl+C</code>는 SIGINT(2번), <code>Ctrl+Z</code>가 SIGTSTP(20번)이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="1">
+        <div class="quiz-q">Q19. 프로세스 우선순위(Nice)에 대한 설명으로 가장 올바른 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q19" value="1"> ① Nice 값의 범위는 -20 ~ 19이며, -20이 가장 우선순위가 높고 오직 root만 음수 값을 부여할 수 있다.</label>
+          <label><input type="radio" name="q19" value="2"> ② 이미 실행 중인 프로세스의 우선순위를 변경할 때는 <code>nice</code> 명령어를 사용하고, 새로 실행할 때는 <code>renice</code>를 사용한다.</label>
+          <label><input type="radio" name="q19" value="3"> ③ 숫자가 클수록(19에 가까울수록) CPU를 더 먼저 할당받는 높은 우선순위를 갖는다.</label>
+          <label><input type="radio" name="q19" value="4"> ④ 일반 사용자도 자신의 프로세스 Nice 값을 -10으로 낮추어 우선순위를 높일 수 있다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ①</strong> | 이미 실행 중인 프로세스의 NI값을 PID로 변경할 때는 <code>renice</code>를 사용한다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="3">
+        <div class="quiz-q">Q20. 리눅스에서 DNS 네임서버의 IP 주소(<code>nameserver</code>)를 설정하는 파일(㉠)과, 레드햇 계열의 네트워크 인터페이스 설정 파일(<code>ifcfg-*</code>)에서 부팅 시 인터페이스를 자동 활성화하도록 지정하는 항목(㉡)은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q20" value="1"> ① ㉠ /etc/hosts / ㉡ BOOTPROTO=yes</label>
+          <label><input type="radio" name="q20" value="2"> ② ㉠ /etc/sysconfig/network / ㉡ AUTO=yes</label>
+          <label><input type="radio" name="q20" value="3"> ③ ㉠ /etc/resolv.conf / ㉡ ONBOOT=yes</label>
+          <label><input type="radio" name="q20" value="4"> ④ ㉠ /etc/nsswitch.conf / ㉡ STARTMODE=auto</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ③</strong> | DNS 서버 지정 파일은 <code>/etc/resolv.conf</code>이며, 부팅 시 자동 활성화 옵션은 <code>ONBOOT=yes</code>이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="2">
+        <div class="quiz-q">Q21. 현재 시스템에 로그인해 있는 모든 사용자의 터미널에 공지 메시지를 일괄 전송하는 명령어(㉠)와, 다른 일반 사용자가 보내는 <code>write</code> 메시지 수신을 거부/허용하는 명령어(㉡)는?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q21" value="1"> ① ㉠ talk / ㉡ wall</label>
+          <label><input type="radio" name="q21" value="2"> ② ㉠ wall / ㉡ mesg</label>
+          <label><input type="radio" name="q21" value="3"> ③ ㉠ write / ㉡ echo</label>
+          <label><input type="radio" name="q21" value="4"> ④ ㉠ broadcast / ㉡ block</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ②</strong> | 전체 사용자 메시지 전송은 <code>wall</code>(Write All), 메시지 수신 허용/거부 설정은 <code>mesg y</code> / <code>mesg n</code>이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="4">
+        <div class="quiz-q">Q22. 셸 환경변수, 별칭, 히스토리에 대한 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q22" value="1"> ① 등록된 <code>alias</code>를 해제할 때는 <code>rmalias</code> 명령어를 사용한다.</label>
+          <label><input type="radio" name="q22" value="2"> ② 지역 변수를 서브셸(자식 프로세스)에 상속되는 전역 환경변수로 만들 때는 <code>set</code> 명령어를 사용한다.</label>
+          <label><input type="radio" name="q22" value="3"> ③ 바로 직전에 실행한 명령어를 재실행하는 히스토리 기호는 <code>!$</code>이다.</label>
+          <label><input type="radio" name="q22" value="4"> ④ <code>export</code>로 전역 환경변수를 등록하고, <code>unalias</code>로 별칭을 해제하며, <code>!!</code>로 직전 명령어를 재실행한다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ④</strong> | 환경변수 등록은 <code>export</code>, 별칭 해제는 <code>unalias</code>, 직전 명령 재실행은 <code>!!</code>이다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="1">
+        <div class="quiz-q">Q23. 디스크 용량 및 파일 시스템 점검 명령어에 대한 설명으로 옳은 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q23" value="1"> ① 마운트된 파일 시스템의 남은 용량은 <code>df</code>로 확인하고, 특정 디렉터리 하위 파일들의 사용량 합계는 <code>du</code>로 확인한다.</label>
+          <label><input type="radio" name="q23" value="2"> ② 마운트를 해제하는 명령어는 <code>unmount</code>이다.</label>
+          <label><input type="radio" name="q23" value="3"> ③ 파일 시스템 무결성을 점검하고 복구하는 명령어는 <code>fdisk</code>이다.</label>
+          <label><input type="radio" name="q23" value="4"> ④ <code>blkid</code> 명령어는 현재 실행 중인 백그라운드 프로세스의 ID를 출력한다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ①</strong> | ② 마운트 해제는 <code>umount</code>. ③ 파일 시스템 점검/복구는 <code>fsck</code>. ④ <code>blkid</code>는 블록 장치의 UUID와 파일시스템 타입을 출력한다.</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="3">
+        <div class="quiz-q">Q24. 파이프라인 중간에서 표준 출력을 화면에 보여주는 동시에 파일로도 저장하는 명령어는?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q24" value="1"> ① tr</label>
+          <label><input type="radio" name="q24" value="2"> ② xargs</label>
+          <label><input type="radio" name="q24" value="3"> ③ tee</label>
+          <label><input type="radio" name="q24" value="4"> ④ split</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ③</strong> | <code>tee</code>는 T자 배관처럼 표준 출력을 화면과 파일 양쪽으로 동시에 보낸다(<code>tee -a</code>는 파일 끝에 이어쓰기).</div>
+      </div>
+
+      <div class="quiz-card searchable-block" data-ans="4">
+        <div class="quiz-q">Q25. 시스템 정보를 확인하거나 종료하는 명령어에 대한 설명으로 틀린 것은?</div>
+        <div class="quiz-opts">
+          <label><input type="radio" name="q25" value="1"> ① <code>uname -r</code>은 현재 실행 중인 리눅스 커널의 릴리스 버전을 출력한다.</label>
+          <label><input type="radio" name="q25" value="2"> ② <code>shutdown -r +10</code>은 10분 후에 시스템을 재부팅(Reboot)한다.</label>
+          <label><input type="radio" name="q25" value="3"> ③ <code>lastb</code> 명령어는 <code>/var/log/btmp</code> 파일을 읽어 로그인 실패 이력을 출력한다.</label>
+          <label><input type="radio" name="q25" value="4"> ④ <code>which</code> 명령어는 시스템 전체 디스크를 실시간 탐색하여 일반 텍스트 문서와 매뉴얼 페이지까지 모두 찾아준다.</label>
+        </div>
+        <div class="quiz-exp"><strong>정답: ④</strong> | <code>which</code>는 오직 <code>$PATH</code> 환경변수에 등록된 경로에서 실행 파일만 찾는다. 바이너리·소스·매뉴얼을 함께 찾는 것은 <code>whereis</code>, 전체 실시간 탐색은 <code>find</code>이다.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.25rem; display:flex; align-items:center; gap:0.85rem; flex-wrap:wrap;">
+      <button class="btn" id="grade-btn">25문항 일괄 채점 &amp; 해설 열기</button>
+      <button class="btn" id="reset-btn" style="background:#475569;">답안 초기화</button>
+      <span id="quiz-score" style="font-weight:900; font-size:1.05rem;"></span>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // 1. 카드 암기 완료 체크 & 상단 진도율 게이지 업데이트
+  function updateProgress() {
+    var allCards = document.querySelectorAll('.card');
+    var doneCards = document.querySelectorAll('.card.mastered');
+    var pct = allCards.length ? Math.round((doneCards.length / allCards.length) * 100) : 0;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('mastery-stat').textContent = '학습 완료: ' + doneCards.length + ' / ' + allCards.length + ' 카드 (' + pct + '%)';
+  }
+
+  function toggleMastery(btn) {
+    var card = btn.closest('.card');
+    card.classList.toggle('mastered');
+    btn.textContent = card.classList.contains('mastered') ? '★ 마스터 완료!' : '✔ 암기 완료';
+    updateProgress();
+  }
+  updateProgress();
+
+  // 2. 인터랙티브 umask 비트 제거 계산기
+  var umaskIn = document.getElementById('umask-in');
+  var fileOut = document.getElementById('umask-file-out');
+  var dirOut = document.getElementById('umask-dir-out');
+
+  function toRwx(oct) {
+    var map = ['---','--x','-w-','-wx','r--','r-x','rw-','rwx'];
+    var s = oct.toString().padStart(3, '0');
+    return map[parseInt(s[0],10)] + map[parseInt(s[1],10)] + map[parseInt(s[2],10)];
+  }
+
+  function calcUmask() {
+    var val = umaskIn.value.trim();
+    if (!/^[0-7]{3}$/.test(val)) {
+      fileOut.textContent = '0~7 사이 3자리 숫자를 입력해!';
+      dirOut.textContent = '';
+      return;
+    }
+    var u0 = parseInt(val[0], 10), u1 = parseInt(val[1], 10), u2 = parseInt(val[2], 10);
+    var f0 = 6 & (~u0), f1 = 6 & (~u1), f2 = 6 & (~u2);
+    var d0 = 7 & (~u0), d1 = 7 & (~u1), d2 = 7 & (~u2);
+    var fStr = '' + f0 + f1 + f2;
+    var dStr = '' + d0 + d1 + d2;
+    fileOut.textContent = '일반 파일(666): ' + fStr + ' (-' + toRwx(fStr) + ')';
+    dirOut.textContent = '디렉터리(777): ' + dStr + ' (d' + toRwx(dStr) + ')';
+  }
+  umaskIn.addEventListener('input', calcUmask);
+  calcUmask();
+
+  // 3. 실시간 전체 검색
+  var searchInput = document.getElementById('search-input');
+  var blocks = document.querySelectorAll('.searchable-block');
+  var sections = document.querySelectorAll('section.domain');
+
+  searchInput.addEventListener('input', function() {
+    var q = this.value.trim().toLowerCase();
+    blocks.forEach(function(b) {
+      if (!q || b.textContent.toLowerCase().indexOf(q) !== -1) {
+        b.classList.remove('hidden-by-search');
+      } else {
+        b.classList.add('hidden-by-search');
+      }
+    });
+    sections.forEach(function(s) {
+      var vis = s.querySelectorAll('.searchable-block:not(.hidden-by-search)');
+      if (!q || vis.length > 0) s.classList.remove('hidden-by-search');
+      else s.classList.add('hidden-by-search');
+    });
+  });
+
+  // 4. 모의고사 채점
+  var gradeBtn = document.getElementById('grade-btn');
+  var resetBtn = document.getElementById('reset-btn');
+  var quizScore = document.getElementById('quiz-score');
+  var quizCards = document.querySelectorAll('.quiz-card');
+
+  gradeBtn.addEventListener('click', function() {
+    var correct = 0;
+    quizCards.forEach(function(card) {
+      var ans = card.getAttribute('data-ans');
+      var sel = card.querySelector('input[type="radio"]:checked');
+      var exp = card.querySelector('.quiz-exp');
+      exp.style.display = 'block';
+      if (sel && sel.value === ans) {
+        correct++;
+        card.style.borderColor = '#059669';
+        exp.style.background = '#ecfdf5';
+      } else {
+        card.style.borderColor = '#dc2626';
+        exp.style.background = '#fef2f2';
+      }
+    });
+    var score = Math.round((correct / quizCards.length) * 100);
+    quizScore.textContent = '점수: ' + score + '점 (' + correct + ' / ' + quizCards.length + ' 정답) — ' + (score >= 60 ? '🎉 합격 안정권!' : '🔥 오답 해설만 다시 체크해!');
+    quizScore.style.color = score >= 60 ? '#059669' : '#dc2626';
+  });
+
+  resetBtn.addEventListener('click', function() {
+    quizCards.forEach(function(card) {
+      card.querySelectorAll('input[type="radio"]').forEach(function(r) { r.checked = false; });
+      card.querySelector('.quiz-exp').style.display = 'none';
+      card.style.borderColor = '#e2e8f0';
+    });
+    quizScore.textContent = '';
+  });
+</script>
+</body>
+</html>

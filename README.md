@@ -16,7 +16,7 @@ Linux를 학습하며 직접 실행한 실습과 주제별 정리, 응용 결과
 | **[`file/`](./file/)** | 파일·디렉터리 관리, 패키지 관리, 파일 권한 |
 | **[`network/`](./network/)** | 네트워크 기초와 DNS |
 | **[`process/`](./process/)** | 프로세스 조회와 작업 제어 |
-| **[`shell_script/`](./shell_script/)** | 셸 스크립트 작성, 변수와 실행 |
+| **[`shell_script/`](./shell_script/)** | Bash 변수·산술 연산, 입력, 조건문과 반복문 |
 | **[`text/`](./text/)** | 텍스트 출력, 리다이렉션, 검색과 파이프라인 |
 | **[`user_permission/`](./user_permission/)** | 사용자·그룹 관리와 권한 설정 |
 | **[`project/`](./project/)** | 학습한 내용을 조합한 응용 실습 및 포트폴리오 후보 |

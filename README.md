@@ -13,6 +13,7 @@ Linux를 학습하며 직접 실행한 실습과 주제별 정리, 응용 결과
 | 폴더 | 내용 |
 | --- | --- |
 | **[`basic/`](./basic/)** | 기본 명령어, Linux 기초 개념과 경로 |
+| **[`development/`](./development/)** | 배포, Spring Boot, Git과 GitHub 등 개발 기초 |
 | **[`file/`](./file/)** | 파일·디렉터리 관리, 패키지 관리, 파일 권한 |
 | **[`network/`](./network/)** | 네트워크 기초와 DNS |
 | **[`process/`](./process/)** | 프로세스 조회와 작업 제어 |
